@@ -1,0 +1,53 @@
+<div class="flex items-center gap-4 mb-4">
+  <div class="">
+    <input type="text" placeholder="Pesquisar mesa"
+      class="border border-gray-300 rounded-sm p-1 w-full placeholder:text-sm placeholder:text-gray-500 placeholder:font-normal" />
+  </div>
+  <div>
+    <div class="flex items-center gap-2">
+      <span class="w-3 h-3 bg-gray-200 border border-gray-300 rounded-full"></span>
+      <span>Indisponível</span>
+      <span class="w-3 h-3 bg-blue-200 border border-blue-300 rounded-full"></span>
+      <span>Disponível</span>
+      <span class="w-3 h-3 bg-red-200 border border-red-300 rounded-full"></span>
+      <span>Ocupada</span>
+      <span class="w-3 h-3 bg-yellow-200 border border-yellow-300 rounded-full"></span>
+      <span>Fechamento</span>
+      <span class="w-3 h-3 bg-emerald-200 border border-emerald-300 rounded-full"></span>
+      <span>Livre</span>
+      <span class="w-3 h-3 bg-purple-200 border border-purple-300 rounded-full"></span>
+      <span>Reservada</span>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-3 w-full">
+  @for (item of [1,2,3,4,5,6,7,8,9,10,11,12, 13, 14,15,16,17,19,20,21,22, 23,24,25,26,27, 28, 29, 30]; track item) {
+  <div class="rounded bg-blue-200 hover:bg-gray-200 cursor-pointer min-w-[230px] max-w-[260px]"
+    [class.bg-blue-300]="item % 2 === 0" [class.bg-red-200]="item % 3 === 0" [class.bg-yellow-200]="item % 4 === 0"
+    [class.bg-emerald-200]="item % 5 === 0" [class.bg-gray-200]="item % 6 === 1">
+    <div class="flex justify-between items-center border-b border-white mb-2 px-2 py-1">
+      <div class="text-lg text-gray-500">
+        0{{ item >= 10 ? item : '0' + item }}
+      </div>
+      <div class="text-sm font-medium text-emerald-500">
+        Livre
+      </div>
+    </div>
+    <div class="text-xs text-gray-500 px-2 py-1 gap-1 space-y-1">
+      <div class="text-xs font-normal">
+        Abertura: 10/10/2023 10:00
+      </div>
+      <div class="text-xs font-normal">
+        Vendedor: João
+      </div>
+      <div class="text-xs font-normal">
+        Cliente: Maria
+      </div>
+      <div class="text-xs font-normal">
+        Vlr. Total: R$ 100,00
+      </div>
+    </div>
+  </div>
+  }
+</div>

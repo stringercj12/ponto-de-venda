@@ -1,0 +1,71 @@
+<div class="flex items-center justify-between p-4 bg-white shadow-md">
+  <div>
+    <span class="text-xl font-semibold text-gray-800">PDV CAIXA</span>
+  </div>
+
+  <div class="flex items-center gap-4 space-x-4">
+    <div class="flex items-center gap-2 cursor-pointer relative group" routerLink="/venda">
+      <i class="ph ph-money-wavy"></i>
+      Venda
+    </div>
+    <div class="flex items-center gap-2 cursor-pointer relative group" routerLink="/mesas">
+      <i class="ph ph-fork-knife"></i>
+      Mesas
+    </div>
+    <div class="flex items-center gap-2 cursor-pointer relative group" routerLink="/comandas">
+      <i class="ph ph-scroll"></i>
+      Comandas
+    </div>
+    <div class="flex items-center gap-2 cursor-pointer relative group" routerLink="/pedido">
+      <i class="ph ph-clipboard-text"></i>
+      Pedido
+    </div>
+    <div class="flex items-center gap-2 cursor-pointer relative group" routerLink="/delivery">
+      <i class="ph ph-motorcycle"></i>
+      Delivery
+    </div>
+    <div class="flex items-center gap-2 cursor-pointer relative group" routerLink="/caixa">
+      <i class="ph ph-cash-register"></i>
+      Caixa
+    </div>
+
+    <div class="flex items-center gap-2 cursor-pointer relative group">
+      <img src="https://github.com/stringercj12.png" alt="User Avatar" class="rounded-full w-10 h-10" />
+
+      <div class="flex items-center justify-between border-0 p-0" id="dropdownUserToggle">
+        <div class="text-left mr-3">
+          <span class="block text-gray-900 font-medium">Carlos Stringer</span>
+          <small class="block text-gray-500 text-sm">Vendedor</small>
+        </div>
+        <button class="p-0">
+          <i class="ph ph-caret-down text-gray-400"></i>
+        </button>
+      </div>
+
+      <div
+        class="absolute right-0 top-full mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10 hidden group-hover:block">
+        <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="dropdownUserToggle">
+          <a routerLink="/perfil"
+            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+            role="menuitem">
+            <i class="ph ph-user mr-2"></i>
+            Perfil
+          </a>
+          <a routerLink="/configuracoes"
+            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+            role="menuitem">
+            <i class="ph ph-gear mr-2"></i>
+            Configurações
+          </a>
+          <div class="border-t border-gray-100 my-1"></div>
+          <button
+            class="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
+            role="menuitem">
+            <i class="ph ph-sign-out mr-2"></i>
+            Sair
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
