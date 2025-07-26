@@ -1,21 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FiltroProdutoCategoriaComponent } from "../../_shared/components/filtro-produto-categoria/filtro-produto-categoria.component";
 import { ListaDeProdutosComponent } from '../../_shared/components/lista-de-produtos/lista-de-produtos.component';
+import { ModalService } from '../../_shared/components/modal/modal.service';
+import { ModalComponent } from "../../_shared/components/modal/modal.component";
+import { ListaDeVendedoresComponent } from '../../_shared/components/lista-de-vendedores/lista-de-vendedores.component';
 
 @Component({
   selector: 'app-comanda',
-  imports: [ReactiveFormsModule, FiltroProdutoCategoriaComponent, ListaDeProdutosComponent],
+  imports: [ReactiveFormsModule, FiltroProdutoCategoriaComponent, ListaDeProdutosComponent, ModalComponent],
   templateUrl: './comanda.component.html',
   styleUrl: './comanda.component.css'
 })
 export class ComandaComponent {
-form: FormGroup = new FormGroup({
+  modalService = inject(ModalService);
+
+  form: FormGroup = new FormGroup({
     codigo: new FormControl('', [Validators.required]),
     quantidade: new FormControl(1, [Validators.required, Validators.min(1)])
   });
-
-
 
   aumentarQuantidade() {
     const quantidadeAtual = this.form.get('quantidade')?.value || 1;
@@ -27,5 +30,11 @@ form: FormGroup = new FormGroup({
     if (quantidadeAtual > 1) {
       this.form.patchValue({ quantidade: quantidadeAtual - 1 });
     }
+  }
+
+  abrirModal() {
+    this.modalService.openModal(ListaDeVendedoresComponent, {
+      title: 'Selecione um Vendedor',
+    });
   }
 }

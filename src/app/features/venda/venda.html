@@ -1,9 +1,10 @@
 <div class="grid grid-cols-3 h-full gap-2">
-  <div class="border border-white rounded-md col-span-2">
+  <div class="border border-white rounded-md col-span-2 flex flex-col gap-2 p-2 overflow-hidden overflow-y-auto h-full">
 
-    <app-filtro-produto-categoria class="mb-4"></app-filtro-produto-categoria>
+    <app-filtro-produto-categoria></app-filtro-produto-categoria>
 
     <app-lista-de-produtos></app-lista-de-produtos>
+
   </div>
 
   <div class="border border-white bg-white p-2 overflow-y-auto rounded-md">
@@ -52,26 +53,26 @@
             </tr>
           </thead>
           @for (item of [0,1,2,3,4,5, 6,7,8,9,10]; track $index) {
-          <tr>
-            <td class="p-1 text-center">1</td>
-            <td class="px-2 py-1 w-96">Hamburguer</td>
+          <tr class="border-b border-gray-200 hover:bg-gray-50">
+            <td class="p-1 text-center align-top">1</td>
+            <td class="px-2 py-1 min-w-40">Hamburguer</td>
             <td class="px-2 py-1">1</td>
-            <td class="px-2 py-1">R$ 5,00</td>
-            <td class="px-2 py-1">R$ 5,00</td>
+            <td class="px-2 py-1 whitespace-nowrap">R$ 5,00</td>
+            <td class="px-2 py-1 whitespace-nowrap">R$ 5,00</td>
           </tr>
-          <tr>
-            <td class="p-1 text-center">2</td>
-            <td class="px-2 py-1 w-96">Coca Cola</td>
+          <tr class="border-b border-gray-200 hover:bg-gray-50">
+            <td class="p-1 text-center align-top">2</td>
+            <td class="px-2 py-1 min-w-40">Coca Cola</td>
             <td class="px-2 py-1">1</td>
-            <td class="px-2 py-1">R$ 5,00</td>
-            <td class="px-2 py-1">R$ 5,00</td>
+            <td class="px-2 py-1 whitespace-nowrap">R$ 5,00</td>
+            <td class="px-2 py-1 whitespace-nowrap">R$ 5,00</td>
           </tr>
-          <tr>
-            <td class="p-1 text-center">2</td>
-            <td class="px-2 py-1 w-96"> Agua Mineral Crystal Vip com Gás 350ml</td>
+          <tr class="border-b border-gray-200 hover:bg-gray-50">
+            <td class="p-1 text-center align-top">2</td>
+            <td class="px-2 py-1 min-w-40"> Agua Mineral Crystal Vip com Gás 350ml</td>
             <td class="px-2 py-1">2</td>
-            <td class="px-2 py-1">R$ 2,99</td>
-            <td class="px-2 py-1">R$ 5,98</td>
+            <td class="px-2 py-1 whitespace-nowrap">R$ 2,99</td>
+            <td class="px-2 py-1 whitespace-nowrap">R$ 5,98</td>
           </tr>
           }
         </table>

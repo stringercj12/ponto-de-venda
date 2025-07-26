@@ -1,0 +1,22 @@
+<!-- Modal Overlay -->
+<div
+  class="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300"
+  (click)="onBackd10pClick()">
+  <!-- Modal Container -->
+  <div class="bg-white rounded-md shadow-lg max-w-lg w-full p-3 relative z-10 animate-fade-in"
+    (click)="$event.stopPropagation()">
+    <div class="flex items-start justify-between mb-2">
+      <div>
+        {{title}}
+      </div>
+
+      <!-- Close Button -->
+      <button class="text-gray-500 hover:text-gray-700" (click)="closeModal()">
+        ✕
+      </button>
+    </div>
+
+    <!-- Modal Content -->
+    <ng-content></ng-content>
+  </div>
+</div>

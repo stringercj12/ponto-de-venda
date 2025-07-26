@@ -1,35 +1,26 @@
-<div class="flex items-center justify-between p-4 bg-white shadow-md">
-  <div>
+<div class="flex items-center justify-between h-20 bg-white shadow-md">
+  <div class="px-4">
     <span class="text-xl font-semibold text-gray-800">PDV CAIXA</span>
   </div>
 
-  <div class="flex items-center gap-4 space-x-4">
-    <div class="flex items-center gap-2 cursor-pointer relative group" routerLink="/venda">
-      <i class="ph ph-money-wavy"></i>
-      Venda
-    </div>
-    <div class="flex items-center gap-2 cursor-pointer relative group" routerLink="/mesas">
-      <i class="ph ph-fork-knife"></i>
-      Mesas
-    </div>
-    <div class="flex items-center gap-2 cursor-pointer relative group" routerLink="/comandas">
-      <i class="ph ph-scroll"></i>
-      Comandas
-    </div>
-    <div class="flex items-center gap-2 cursor-pointer relative group" routerLink="/pedido">
-      <i class="ph ph-clipboard-text"></i>
-      Pedido
-    </div>
-    <div class="flex items-center gap-2 cursor-pointer relative group" routerLink="/delivery">
-      <i class="ph ph-motorcycle"></i>
-      Delivery
-    </div>
-    <div class="flex items-center gap-2 cursor-pointer relative group" routerLink="/caixa">
-      <i class="ph ph-cash-register"></i>
-      Caixa
-    </div>
+  <div class="flex items-center h-full">
+    @for (item of items; track $index) {
+    <div
+      class="group flex items-center gap-2 cursor-pointer relative px-4 h-full hover:bg-gray-50 text-gray-700 text-sm font-medium"
+      [routerLink]="item.link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
 
-    <div class="flex items-center gap-2 cursor-pointer relative group">
+      <i class="{{item.icon}} transition-colors duration-300 group-[.active]:text-emerald-700"></i>
+      <span class="transition-colors duration-300 group-[.active]:text-emerald-700">
+        {{item.label}}
+      </span>
+
+      <span
+        class="absolute bottom-0 left-0 h-[3px] w-0 bg-emerald-700 transition-all duration-300 group-[.active]:w-full">
+      </span>
+    </div>
+    }
+
+    <div class="flex items-center gap-2 cursor-pointer relative group px-4 h-full hover:bg-gray-50">
       <img src="https://github.com/stringercj12.png" alt="User Avatar" class="rounded-full w-10 h-10" />
 
       <div class="flex items-center justify-between border-0 p-0" id="dropdownUserToggle">

@@ -1,11 +1,15 @@
+<app-modal></app-modal>
+
 <div class="grid grid-cols-3 h-full gap-2">
   <div class="col-span-2 border border-white rounded-md p-2 gap-4 flex flex-col h-full">
 
-    <div class="flex items-center p-2 bg-white rounded">
+    <div class="flex items-end gap-2 p-2 bg-white rounded">
       <div>
-        <label for="">Comanda</label>
+        <label for="numeroComanda" class="text-sm font-semibold text-gray-700">Comanda:</label>
         <div class="flex items-center gap-1">
-          <select name="" id="" class="border border-gray-300 bg-white rounded-sm p-1 w-full text-sm">
+          <select name="numeroComanda" id="numeroComanda"
+            class="border border-gray-300 bg-white rounded-sm p-1 w-full text-sm">
+            <option value="">Selecione</option>
             <option value="">001</option>
             <option value="">002</option>
             <option value="">003</option>
@@ -18,13 +22,32 @@
         </div>
       </div>
       <div>
-        Selecionar vendedor
+        <button class="p-2 bg-indigo-400 hover:bg-indigo-600 text-white rounded cursor-pointer" (click)="abrirModal()">
+          Selecionar vendedor
+        </button>
       </div>
       <div>
-        Selecionar cliente
+        <button class="p-2 bg-indigo-400 hover:bg-indigo-600 text-white rounded cursor-pointer">
+          Selecionar cliente
+        </button>
       </div>
-      <div>
-        Nº Pessoas
+      <div class="bg-gray-50 rounded p-1 grid grid-cols-2 divide-x divide-gray-200 items-center gap-2">
+        <div class="flex flex-col text-center p-1">
+          <span class="text-sm font-semibold text-gray-700">
+            Nº Pessoas:
+          </span>
+          <span class="text-sm text-gray-500 font-medium">
+            01
+          </span>
+        </div>
+        <div class="flex flex-col text-center p-1">
+          <span class="text-sm font-semibold text-gray-700">
+            Abertura:
+          </span>
+          <span class="text-sm text-gray-500 font-medium">
+            12/10/2023 14:00
+          </span>
+        </div>
       </div>
     </div>
 
