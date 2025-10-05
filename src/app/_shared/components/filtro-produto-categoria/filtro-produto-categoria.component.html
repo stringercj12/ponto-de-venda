@@ -1,7 +1,27 @@
-<div class="grid grid-cols-5 gap-2 border-b border-white pb-2">
-  <button class="p-4 bg-white rounded hover:bg-gray-200 cursor-pointer font-medium text-slate-800">Todos</button>
-  <button class="p-4 bg-white rounded hover:bg-gray-200 cursor-pointer font-medium text-slate-800">Bebidas</button>
-  <button class="p-4 bg-white rounded hover:bg-gray-200 cursor-pointer font-medium text-slate-800">Lanches</button>
-  <button class="p-4 bg-white rounded hover:bg-gray-200 cursor-pointer font-medium text-slate-800">Restaurante</button>
-  <button class="p-4 bg-white rounded hover:bg-gray-200 cursor-pointer font-medium text-slate-800">Sobremesa</button>
+<div class="flex items-center justify-between w-full gap-2 border-b border-white pb-2">
+  @if(categories.length > 5){
+  <button
+    class="flex items-center justify-center h-14 p-4 bg-white rounded hover:bg-gray-200 cursor-pointer font-medium text-slate-800 disabled:opacity-50"
+    [disabled]="false" (click)="scrollLeft()">
+    <i class="ph ph-caret-left"></i>
+  </button>
+  }
+
+  @for (categoria of categories; track categoria.id) {
+  <button
+    class="flex items-center justify-center h-14 grow p-4 border border-transparent bg-white rounded hover:bg-gray-200 cursor-pointer font-medium text-slate-800"
+    [class.!border-emerald-700]="categoria.id === selectedCategoryId"
+    [class.!text-emerald-700]="categoria.id === selectedCategoryId"
+    [class.!bg-emerald-50]="categoria.id === selectedCategoryId" (click)="selectCategory(categoria.id)">
+    {{ categoria.name }}
+  </button>
+  }
+
+  @if(categories.length > 5){
+  <button
+    class="flex items-center justify-center h-14 p-4 bg-white rounded hover:bg-gray-200 cursor-pointer font-medium text-slate-800 disabled:opacity-50"
+    [disabled]="false" (click)="scrollRight()">
+    <i class="ph ph-caret-right"></i>
+  </button>
+  }
 </div>

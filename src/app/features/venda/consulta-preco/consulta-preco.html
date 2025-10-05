@@ -1,0 +1,56 @@
+<div class="bg-white p-4  flex flex-col h-full">
+  <div class="flex flex-col mb-4">
+    <label for="codigo" class="text-sm font-semibold text-gray-700 mb-1">Pesquisar (Código, Código de Barras, Descrição
+      e
+      Categoria(grupo))</label>
+    <input type="text"
+      class="border border-gray-300 rounded-sm p-1 w-full placeholder:text-sm outline-0 placeholder:text-gray-500 font-medium"
+      id="codigo" [(ngModel)]="search" />
+  </div>
+
+  <div class="flex-grow border border-gray-100 rounded-md overflow-hidden overflow-y-auto">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+      <thead class="text-xs text-gray-700 bg-gray-100 sticky top-0 z-10">
+        <tr class="text-gray-700 text-sm">
+          <th class="px-2 py-1 whitespace-nowrap border-x border-gray-200">
+            Código
+          </th>
+          <th class="px-2 py-1 whitespace-nowrap border-x border-gray-200">Código de Barras</th>
+          <th class="px-2 py-1 whitespace-nowrap border-x border-gray-200">Descrição</th>
+          <th class="px-2 py-1 whitespace-nowrap border-x border-gray-200">Grupo</th>
+          <th class="px-2 py-1 whitespace-nowrap border-x border-gray-200">Estoque</th>
+          <th class="px-2 py-1 whitespace-nowrap border-x border-gray-200">Unidade</th>
+          <th class="px-2 py-1 whitespace-nowrap border-x border-gray-200 rounded-r">Preço de venda</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b border-gray-200 hover:bg-gray-50">
+          <td class="p-1 text-center whitespace-nowrap">0001</td>
+          <td class="border-x border-gray-200 p-1 text-center whitespace-nowrap">7891234567890</td>
+          <td class="px-2 py-1 w-96">Produto Exemplo 1</td>
+          <td class="border-x border-gray-200 p-1 whitespace-nowrap">Categoria A</td>
+          <td class="border-x border-gray-200 p-1 text-center whitespace-nowrap ">50</td>
+          <td class="border-x border-gray-200 p-1 text-center whitespace-nowrap">un</td>
+          <td class="border-x border-gray-200 p-1 text-center whitespace-nowrap">R$ 10,00</td>
+        </tr>
+        <tr class="border-b border-gray-200 hover:bg-gray-50 selected:bg-emerald-100">
+          <td class="p-1 text-center">0002</td>
+          <td class="border-x border-gray-200 p-1 text-center">7891234567891</td>
+          <td class="px-2 py-1 w-96">Produto Exemplo 2</td>
+          <td class="border-x border-gray-200 p-1">Categoria B</td>
+          <td class="border-x border-gray-200 p-1 text-center">30</td>
+          <td class="border-x border-gray-200 p-1 text-center">kg</td>
+          <td class="border-x border-gray-200 p-1 text-center">R$ 20,00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="flex items-center justify-end mt-4">
+    <button
+      class="flex items-center gap-2 px-4 py-2 bg-emerald-700 text-white rounded hover:bg-emerald-800 cursor-pointer font-medium">
+      <i class="ph ph-check"></i>
+      Vender Item
+    </button>
+  </div>
+</div>

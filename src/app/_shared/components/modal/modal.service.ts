@@ -11,9 +11,9 @@ export class ModalService {
   constructor() { }
 
   openModal<T>(component: Type<T>, options: { title?: string } = {}) {
-    if(!this.modalComponentRef) return;
+    if (!this.modalComponentRef) return;
     const modalElement = this.modalComponentRef.createComponent(component);
-    modalElement.instance.title = options.title || 'Modal Title';
-    modalElement.instance.visible = true;
+    modalElement.setInput('title', options.title || 'Modal Title');
+    modalElement.setInput('visible', true);
   }
 }
