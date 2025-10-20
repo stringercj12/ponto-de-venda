@@ -1,5 +1,5 @@
 <div class="flex items-center justify-between w-full gap-2 border-b border-white pb-2">
-  @if(categories.length > 5){
+  @if(categories().length > 5){
   <button
     class="flex items-center justify-center h-14 p-4 bg-white rounded hover:bg-gray-200 cursor-pointer font-medium text-slate-800 disabled:opacity-50"
     [disabled]="false" (click)="scrollLeft()">
@@ -7,17 +7,17 @@
   </button>
   }
 
-  @for (categoria of categories; track categoria.id) {
+  @for (categoria of categories(); track categoria.id) {
   <button
     class="flex items-center justify-center h-14 grow p-4 border border-transparent bg-white rounded hover:bg-gray-200 cursor-pointer font-medium text-slate-800"
     [class.!border-emerald-700]="categoria.id === selectedCategoryId"
     [class.!text-emerald-700]="categoria.id === selectedCategoryId"
     [class.!bg-emerald-50]="categoria.id === selectedCategoryId" (click)="selectCategory(categoria.id)">
-    {{ categoria.name }}
+    {{ categoria.nome }}
   </button>
   }
 
-  @if(categories.length > 5){
+  @if(categories().length > 5){
   <button
     class="flex items-center justify-center h-14 p-4 bg-white rounded hover:bg-gray-200 cursor-pointer font-medium text-slate-800 disabled:opacity-50"
     [disabled]="false" (click)="scrollRight()">
