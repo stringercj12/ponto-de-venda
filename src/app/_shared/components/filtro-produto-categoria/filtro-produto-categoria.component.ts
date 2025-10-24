@@ -1,68 +1,33 @@
-import { Component, signal } from '@angular/core';
+import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { CategoryService } from '../../services/category.service';
+import { LowerCasePipe, TitleCasePipe } from '@angular/common';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-filtro-produto-categoria',
-  imports: [],
+  imports: [TitleCasePipe],
   templateUrl: './filtro-produto-categoria.component.html',
   styleUrl: './filtro-produto-categoria.component.css'
 })
 export class FiltroProdutoCategoriaComponent {
 
-  selectedCategoryId = 0;
+  selectedCategoryId: number = 0;
 
   categories = signal<any[]>([]);
-  // [
-  //   {
-  //     id: 0,
-  //     name: 'Todos',
-  //     icon: 'assets/icons/categoria-todos.svg',
-  //     selected: true,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: 'Bebidas',
-  //     icon: 'assets/icons/categoria-bebidas.svg',
-  //     selected: false,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'Lanches',
-  //     icon: 'assets/icons/categoria-lanches.svg',
-  //     selected: false,
-  //   },
-  //   {
-  //     id: 3,
-  //     name: 'Sobremesas',
-  //     icon: 'assets/icons/categoria-sobremesas.svg',
-  //     selected: false,
-  //   },
-  //   {
-  //     id: 4,
-  //     name: 'Acompanhamentos',
-  //     icon: 'assets/icons/categoria-acompanhamentos.svg',
-  //     selected: false,
-  //   },
-  //   {
-  //     id: 5,
-  //     name: 'Combos',
-  //     icon: 'assets/icons/categoria-combos.svg',
-  //     selected: false,
-  //   },
-  //   {
-  //     id: 6,
-  //     name: 'Promoções',
-  //     icon: 'assets/icons/categoria-promocoes.svg',
-  //     selected: false,
-  //   },
-  // ];
+  @Output() categoriyEvent: EventEmitter<number> = new EventEmitter<number>();
 
-  constructor(private categoryService: CategoryService) { }
+  constructor(private categoryService: CategoryService, private ngxSpinnerService: NgxSpinnerService) { }
 
   ngOnInit() {
-    this.categoryService.listCategories().subscribe((categories: any) => {
-      console.log(categories);
-      this.categories.set(categories);
+    this.loadCategories();
+  }
+
+  loadCategories() {
+    this.ngxSpinnerService.show();
+    this.categoryService.listCategories().subscribe((data: any) => {
+      console.log(data.categorias);
+      this.categories.set(data.categorias);
+      this.ngxSpinnerService.hide();
     });
   }
 
@@ -74,8 +39,9 @@ export class FiltroProdutoCategoriaComponent {
     console.log('scrollRight');
   }
 
-  selectCategory(categoryId: any) {
+  selectCategory(categoryId: number) {
     this.selectedCategoryId = categoryId;
+    this.categoriyEvent.emit(categoryId);
     this.categories().map(category => {
       category.selected = category.id === categoryId;
     });

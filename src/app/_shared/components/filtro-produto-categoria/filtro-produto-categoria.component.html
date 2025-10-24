@@ -13,7 +13,7 @@
     [class.!border-emerald-700]="categoria.id === selectedCategoryId"
     [class.!text-emerald-700]="categoria.id === selectedCategoryId"
     [class.!bg-emerald-50]="categoria.id === selectedCategoryId" (click)="selectCategory(categoria.id)">
-    {{ categoria.nome }}
+    {{ categoria.nome | titlecase }}
   </button>
   }
 

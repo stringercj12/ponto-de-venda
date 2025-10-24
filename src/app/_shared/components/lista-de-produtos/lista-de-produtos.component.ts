@@ -1,22 +1,49 @@
-import { Component } from '@angular/core';
+import { Component, Input, input, signal } from '@angular/core';
+import { ProdutoService } from '../../services/produto.service';
+import { CurrencyPipe } from '@angular/common';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-lista-de-produtos',
-  imports: [],
+  imports: [CurrencyPipe],
   templateUrl: './lista-de-produtos.component.html',
   styleUrl: './lista-de-produtos.component.css'
 })
 export class ListaDeProdutosComponent {
-  items = new Array(100).fill(0).map((_, i) => ({
-    id: i + 1,
-    name: `Item ${i + 1}`,
-    description: `Description for Item ${i + 1}`,
-    date: new Date(2025, 10, 30 + i).toLocaleDateString(),
-    time: new Date(2025, 10, 30 + i, 11, 12).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    status: i % 2 === 0 ? i % 3 === 1 ? 'Pending' : 'Preparing' : 'Completed',
-    total: `R$ ${(i + 1) * 10},00`,
-    money: (i + 1) * 10 + 0.5,
-    quantity: i % 2 === 0 ? i + 1 : undefined,
-    selected: false
-  }))
+
+  @Input() idCategoria: number = 0;
+
+  produtos = signal<any[]>([]);
+
+  constructor(private produtoService: ProdutoService, private ngxSpinnerService: NgxSpinnerService) { }
+
+  ngOnInit() {
+    this.loadProdutos();
+  }
+
+  ngOnChanges() {
+    this.loadProdutos();
+  }
+
+  loadProdutos() {
+
+    this.ngxSpinnerService.show();
+    if (this.idCategoria != 0) {
+      this.produtoService.getProdutoBycategoria(this.idCategoria).subscribe({
+        next: (data: any) => {
+          console.log(data.produtos);
+          this.ngxSpinnerService.hide();
+          this.produtos.set(data.produtos);
+        }
+      });
+    } else {
+      this.produtoService.getAllProdutos().subscribe({
+        next: (data: any) => {
+          console.log(data.produtos);
+          this.ngxSpinnerService.hide();
+          this.produtos.set(data.produtos);
+        }
+      });
+    }
+  }
 }
