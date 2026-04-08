@@ -1,12 +1,17 @@
 <div class="grid grid-cols-5 gap-2">
   @for (item of produtos(); track $index) {
   <button class="p-2 bg-white border border-gray-200 rounded flex items-center gap-2 cursor-pointer hover:bg-gray-200">
-    <img [src]="item.imageUrl || 'assets/images/default.png'" [alt]="item.nome"
+    <img [src]="item.images[0]?.url || 'assets/images/default.png'" [alt]="item.nome"
       class="w-14 h-14 border border-gray-100 p-1 rounded" />
-    <div class="flex flex-col gap-1">
-      <span class="text-gray-800 text-xs font-semibold flex-wrap line-clamp-2 text-left">
-        {{item.nome}}
-      </span>
+    <div class="flex flex-col gap-0.5">
+      <div>
+        <span class="text-gray-800 text-sm font-semibold flex-wrap line-clamp-2 text-left">
+          {{item.nome}}
+        </span>
+        <span class="text-gray-600 text-xs font-medium flex-wrap line-clamp-1 text-left">
+          {{item.descricao}}
+        </span>
+      </div>
       <span class="text-gray-500 text-xs text-left">{{item.preco | currency:'BRL'}}</span>
     </div>
   </button>

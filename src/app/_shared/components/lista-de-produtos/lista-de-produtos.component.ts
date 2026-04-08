@@ -2,6 +2,7 @@ import { Component, Input, input, signal } from '@angular/core';
 import { ProdutoService } from '../../services/produto.service';
 import { CurrencyPipe } from '@angular/common';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Product } from '../../interfaces/product';
 
 @Component({
   selector: 'app-lista-de-produtos',
@@ -13,7 +14,7 @@ export class ListaDeProdutosComponent {
 
   @Input() idCategoria: number = 0;
 
-  produtos = signal<any[]>([]);
+  produtos = signal<Product[]>([]);
 
   constructor(private produtoService: ProdutoService, private ngxSpinnerService: NgxSpinnerService) { }
 
@@ -31,17 +32,25 @@ export class ListaDeProdutosComponent {
     if (this.idCategoria != 0) {
       this.produtoService.getProdutoBycategoria(this.idCategoria).subscribe({
         next: (data: any) => {
-          console.log(data.produtos);
+          console.log(data);
           this.ngxSpinnerService.hide();
-          this.produtos.set(data.produtos);
+          this.produtos.set(data);
+        },
+        error: () => {
+          this.produtos.set([]);
+          this.ngxSpinnerService.hide();
         }
       });
     } else {
       this.produtoService.getAllProdutos().subscribe({
         next: (data: any) => {
-          console.log(data.produtos);
+          console.log(data);
           this.ngxSpinnerService.hide();
-          this.produtos.set(data.produtos);
+          this.produtos.set(data);
+        },
+        error: () => {
+          this.produtos.set([]);
+          this.ngxSpinnerService.hide();
         }
       });
     }

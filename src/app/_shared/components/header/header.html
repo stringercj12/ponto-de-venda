@@ -1,15 +1,17 @@
-<div class="flex items-center justify-between h-20 bg-white shadow-md">
-  <div class="px-4">
-    <span class="text-xl font-semibold text-gray-800">PDV CAIXA</span>
+<header class="flex items-center h-20 bg-white shadow-md border-none w-full">
+
+  <div class="p-toolbar-group-start">
+    <div class="px-4">
+      <span class="text-xl font-semibold text-gray-800">PDV CAIXA</span>
+    </div>
   </div>
 
   <div class="flex items-center h-full">
     @for (item of items; track $index) {
-    <div
-      class="group flex items-center gap-2 cursor-pointer relative px-4 h-full hover:bg-gray-50 text-gray-700 text-sm font-medium"
-      [routerLink]="item.link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-
-      <i class="{{item.icon}} transition-colors duration-300 group-[.active]:text-emerald-700"></i>
+    <a [routerLink]="item.routerLink" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+      class="group flex items-center gap-2 cursor-pointer relative px-4 h-full hover:bg-gray-50 text-gray-700 text-sm font-medium transition-colors duration-300"
+      [ngClass]="{ 'active': routerLinkActive }" #routerLinkActive="routerLinkActive">
+      <i [class]="item.icon + ' transition-colors duration-300 group-[.active]:text-emerald-700'"></i>
       <span class="transition-colors duration-300 group-[.active]:text-emerald-700">
         {{item.label}}
       </span>
@@ -17,46 +19,56 @@
       <span
         class="absolute bottom-0 left-0 h-[3px] w-0 bg-emerald-700 transition-all duration-300 group-[.active]:w-full">
       </span>
-    </div>
+    </a>
     }
+  </div>
 
-    <div class="flex items-center gap-2 cursor-pointer relative group px-4 h-full hover:bg-gray-50">
-      <img src="https://github.com/stringercj12.png" alt="User Avatar" class="rounded-full w-10 h-10" />
+  <div class="flex items-center gap-2 cursor-pointer relative group px-4 h-full hover:bg-gray-50"
+    (click)="userDropdown.toggle($event)">
 
-      <div class="flex items-center justify-between border-0 p-0" id="dropdownUserToggle">
-        <div class="text-left mr-3">
-          <span class="block text-gray-900 font-medium">Carlos Stringer</span>
-          <small class="block text-gray-500 text-sm">Vendedor</small>
-        </div>
-        <button class="p-0">
-          <i class="ph ph-caret-down text-gray-400"></i>
-        </button>
+    <p-avatar image="https://github.com/stringercj12.png" size="large" shape="circle" styleClass="w-10 h-10">
+    </p-avatar>
+
+    <div class="flex items-center justify-between border-0 p-0">
+      <div class="text-left mr-3">
+        <span class="block text-gray-900 font-medium">Carlos Stringer</span>
+        <small class="block text-gray-500 text-sm">Vendedor</small>
       </div>
-
-      <div
-        class="absolute right-0 top-full mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10 hidden group-hover:block">
-        <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="dropdownUserToggle">
-          <a routerLink="/perfil"
-            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-            role="menuitem">
-            <i class="ph ph-user mr-2"></i>
-            Perfil
-          </a>
-          <a routerLink="/configuracoes"
-            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-            role="menuitem">
-            <i class="ph ph-gear mr-2"></i>
-            Configurações
-          </a>
-          <div class="border-t border-gray-100 my-1"></div>
-          <button
-            class="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
-            role="menuitem">
-            <i class="ph ph-sign-out mr-2"></i>
-            Sair
-          </button>
-        </div>
-      </div>
+      <button class="p-0">
+        <i class="ph ph-caret-down text-gray-400"></i>
+      </button>
     </div>
   </div>
-</div>
+
+</header>
+<p-popover #userDropdown styleClass="p-0 border-none shadow-lg">
+  <div class="w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+    <div class="py-1" role="menu">
+      @for (menuItem of userMenuItems; track $index) {
+      }
+      @for (menuItem of userMenuItems; track $index) {
+      @if (menuItem.separator) {
+      <div class="border-t border-gray-100 my-1"></div>
+      }
+      @else {
+      @if(menuItem.routerLink){
+      <a [routerLink]="menuItem.routerLink"
+        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150"
+        [ngClass]="menuItem.styleClass" role="menuitem">
+        <i [class]="menuItem.icon + ' mr-2'"></i>
+        {{ menuItem.label }}
+      </a>
+      }
+      @if(menuItem.command && !menuItem.routerLink){
+      <button (click)="menuItem.command($any($event))"
+        class="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors duration-150"
+        [ngClass]="menuItem.styleClass" role="menuitem">
+        <i [class]="menuItem.icon + ' mr-2'"></i>
+        {{ menuItem.label }}
+      </button>
+      }
+      }
+      }
+    </div>
+  </div>
+</p-popover>

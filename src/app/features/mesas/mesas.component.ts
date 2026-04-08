@@ -3,6 +3,7 @@ import { TableService } from '../../_shared/services/table.service';
 import { DatePipe, JsonPipe, TitleCasePipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 // export enum TableStatus {
 //   'indisponivel',
@@ -33,19 +34,25 @@ export class MesasComponent {
   formContrlSearhch: FormControl = new FormControl('');
 
 
-  constructor(private tableService: TableService) { }
+  constructor(private tableService: TableService, private ngxSpinnerService: NgxSpinnerService) { }
 
   ngOnInit() {
     this.loadTables();
   }
 
   loadTables() {
+
+    this.ngxSpinnerService.show();
     this.tableService.getAllTables().subscribe({
       next: (data: any) => {
         console.log(data.mesas)
         this.originalTables = data.mesas;
         this.filteredTables = data.mesas;
         this.setupSearchControl();
+        this.ngxSpinnerService.hide();
+      },
+      error: () => {
+        this.ngxSpinnerService.hide();
       }
     });
   }

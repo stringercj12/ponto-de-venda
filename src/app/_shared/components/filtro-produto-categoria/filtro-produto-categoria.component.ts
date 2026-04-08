@@ -1,11 +1,11 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, EventEmitter, Output, signal } from '@angular/core';
-import { CategoryService } from '../../services/category.service';
-import { LowerCasePipe, TitleCasePipe } from '@angular/common';
 import { NgxSpinnerService } from 'ngx-spinner';
-
+import { CarouselModule } from 'primeng/carousel';
+import { CategoryService } from '../../services/category.service';
 @Component({
   selector: 'app-filtro-produto-categoria',
-  imports: [TitleCasePipe],
+  imports: [TitleCasePipe, CarouselModule],
   templateUrl: './filtro-produto-categoria.component.html',
   styleUrl: './filtro-produto-categoria.component.css'
 })
@@ -16,18 +16,49 @@ export class FiltroProdutoCategoriaComponent {
   categories = signal<any[]>([]);
   @Output() categoriyEvent: EventEmitter<number> = new EventEmitter<number>();
 
+  responsiveOptions: any[] | undefined;
+
   constructor(private categoryService: CategoryService, private ngxSpinnerService: NgxSpinnerService) { }
 
   ngOnInit() {
     this.loadCategories();
+
+    this.responsiveOptions = [
+      {
+        breakpoint: '1400px',
+        numVisible: 2,
+        numScroll: 1
+      },
+      {
+        breakpoint: '1199px',
+        numVisible: 3,
+        numScroll: 1
+      },
+      {
+        breakpoint: '767px',
+        numVisible: 2,
+        numScroll: 1
+      },
+      {
+        breakpoint: '575px',
+        numVisible: 1,
+        numScroll: 1
+      }
+    ]
   }
 
   loadCategories() {
     this.ngxSpinnerService.show();
-    this.categoryService.listCategories().subscribe((data: any) => {
-      console.log(data.categorias);
-      this.categories.set(data.categorias);
-      this.ngxSpinnerService.hide();
+    this.categoryService.listCategories().subscribe({
+      next: (response) => {
+        console.log(response.categories);
+        this.categories.set(response.categories);
+        this.ngxSpinnerService.hide();
+      },
+      error: () => {
+        this.categories.set([]);
+        this.ngxSpinnerService.hide();
+      }
     });
   }
 
@@ -43,7 +74,7 @@ export class FiltroProdutoCategoriaComponent {
     this.selectedCategoryId = categoryId;
     this.categoriyEvent.emit(categoryId);
     this.categories().map(category => {
-      category.selected = category.id === categoryId;
+      category.selecionado = category.id === categoryId;
     });
   }
 }

@@ -10,14 +10,14 @@ export class ProdutoService {
 
 
   getAllProdutos(): Observable<any[]> {
-    return this.httpClient.get<any[]>('/api/produtos').pipe();
+    return this.httpClient.get<any[]>('produtos').pipe();
   }
 
   getProdutoBycategoria(categoria: number): Observable<any> {
-    return this.httpClient.get<any>(`/api/produtos/categoria/${categoria}`).pipe();
+    return this.httpClient.get<any>(`produtos/categoria/${categoria}`).pipe();
   }
 
   getProdutoByCodigo(codigo: string): Observable<any> {
-    return this.httpClient.get<any>(`/api/produtos/codigo/${codigo}`).pipe();
+    return this.httpClient.get<any>(`produtos/codigo/${codigo}`).pipe();
   }
 }
