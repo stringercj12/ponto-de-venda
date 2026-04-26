@@ -9,12 +9,7 @@ export interface Product {
   descricao: string;
   preco: number;
   codigo: string;
-  categoria: {
-    id: number;
-    nome: string;
-    descricao: string;
-    ativo: boolean;
-  };
+  categorias: string[];
   ativo: boolean;
   images: ProductImage[];
 }

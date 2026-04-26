@@ -19,6 +19,7 @@ export class DeliveryComponent implements OnInit {
     status: string;
     total: string;
     money: number;
+    logo: string;
     selected: boolean;
     quantity?: number;
   } | null = null;
@@ -28,7 +29,7 @@ export class DeliveryComponent implements OnInit {
       this.loading = false
       this.items = new Array(30).fill(0).map((_, i) => ({
         id: i + 1,
-        name: `Item ${i + 1}`,
+        name: `Jorge Renato Bartolo Cordeiro Ferreira`,
         description: `Description for Item ${i + 1}`,
         date: new Date(2025, 10, 30 + i).toLocaleDateString(),
         time: new Date(2025, 10, 30 + i, 11, 12).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -36,6 +37,7 @@ export class DeliveryComponent implements OnInit {
         total: `R$ ${(i + 1) * 10},00`,
         money: (i + 1) * 10 + 0.5,
         quantity: i % 2 === 0 ? i + 1 : undefined,
+        logo: i % 2 === 0 ? 'https://logodownload.org/wp-content/uploads/2017/05/ifood-logo-0.png' : 'https://t2.tudocdn.net/664362?w=1200&h=1200',
         selected: false
       }))
       this.changeDetection.detectChanges();

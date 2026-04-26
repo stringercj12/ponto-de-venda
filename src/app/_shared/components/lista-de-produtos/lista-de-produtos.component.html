@@ -1,19 +1,30 @@
-<div class="grid grid-cols-5 gap-2">
-  @for (item of produtos(); track $index) {
-  <button class="p-2 bg-white border border-gray-200 rounded flex items-center gap-2 cursor-pointer hover:bg-gray-200">
-    <img [src]="item.images[0]?.url || 'assets/images/default.png'" [alt]="item.nome"
-      class="w-14 h-14 border border-gray-100 p-1 rounded" />
-    <div class="flex flex-col gap-0.5">
-      <div>
-        <span class="text-gray-800 text-sm font-semibold flex-wrap line-clamp-2 text-left">
-          {{item.nome}}
-        </span>
-        <span class="text-gray-600 text-xs font-medium flex-wrap line-clamp-1 text-left">
-          {{item.descricao}}
-        </span>
-      </div>
-      <span class="text-gray-500 text-xs text-left">{{item.preco | currency:'BRL'}}</span>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+  @for (produto of produtosFiltrados(); track produto.id) {
+  <button (click)="selecionar.emit(produto)" type="button" [attr.aria-label]="'Selecionar ' + produto.nome"
+    class="flex flex-col h-40 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all overflow-hidden group active:scale-95 bg-white">
+
+    <div class="relative h-20 w-full bg-gray-50 flex items-center justify-center overflow-hidden">
+      @if (produto.images[0]?.url) {
+      <img [src]="produto.images[0].url" [alt]="produto.nome"
+        class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+        loading="lazy">
+      } @else {
+      <i class="ph ph-package text-2xl text-gray-300"></i>
+      }
+    </div>
+
+    <div class="p-2 flex flex-col justify-between grow text-left">
+      <span class="text-[11px] font-bold text-gray-700 uppercase line-clamp-2 leading-tight">
+        {{ produto.nome }}
+      </span>
+      <span class="text-sm font-black text-emerald-600 mt-1">
+        {{ produto.preco | currency:'BRL' }}
+      </span>
     </div>
   </button>
+  } @empty {
+  <div class="col-span-full py-10 text-center text-gray-400 italic">
+    Nenhum produto encontrado nesta categoria.
+  </div>
   }
 </div>

@@ -1,19 +1,18 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FiltroProdutoCategoriaComponent } from "../../_shared/components/filtro-produto-categoria/filtro-produto-categoria.component";
 import { ListaDeProdutosComponent } from '../../_shared/components/lista-de-produtos/lista-de-produtos.component';
-import { ModalService } from '../../_shared/components/modal/modal.service';
-import { ModalComponent } from "../../_shared/components/modal/modal.component";
 import { ListaDeVendedoresComponent } from '../../_shared/components/lista-de-vendedores/lista-de-vendedores.component';
 
 @Component({
   selector: 'app-comanda',
-  imports: [ReactiveFormsModule, FiltroProdutoCategoriaComponent, ListaDeProdutosComponent, ModalComponent],
+  imports: [ReactiveFormsModule, FiltroProdutoCategoriaComponent, ListaDeProdutosComponent],
   templateUrl: './comanda.component.html',
   styleUrl: './comanda.component.css'
 })
 export class ComandaComponent {
-  modalService = inject(ModalService);
+  modalService = inject(Dialog);
 
   form: FormGroup = new FormGroup({
     codigo: new FormControl('', [Validators.required]),
@@ -33,8 +32,9 @@ export class ComandaComponent {
   }
 
   abrirModal() {
-    this.modalService.openModal(ListaDeVendedoresComponent, {
-      title: 'Selecione um Vendedor',
+    this.modalService.open(ListaDeVendedoresComponent, {
+      width: '400px',
+      height: '300px',
     });
   }
 }

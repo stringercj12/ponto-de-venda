@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { environment } from '../../../../environment/environment';
 
 @Component({
@@ -9,13 +9,18 @@ import { environment } from '../../../../environment/environment';
 })
 export class FooterComponent {
 
-  config = {
+  // Estado centralizado via Signal
+  readonly config = signal({
     version: '1.0.0',
     buildDate: '2024-06-01',
-    ambient: environment.ambient,
-    caixa: 'PDV-01',
-    pdv: 'PDV-01',
-    user: 'Admin',
-    printer: 'Printer-01'
-  }
+    ambient: 'PRODUÇÃO', // Ex: environment.ambient
+    caixa: '01',
+    pdv: 'TERMINAL-PDV-01',
+    user: 'ADMIN MASTER',
+    printer: 'EPSON-TM-T20',
+    isPrinterOnline: true // Status dinâmico
+  });
+
+  // Computed para facilitar classes de CSS baseadas no ambiente
+  readonly isProd = computed(() => this.config().ambient === 'PRODUÇÃO');
 }

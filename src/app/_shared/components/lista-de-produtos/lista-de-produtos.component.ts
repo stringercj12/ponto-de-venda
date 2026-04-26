@@ -1,8 +1,9 @@
-import { Component, Input, input, signal } from '@angular/core';
+import { Component, computed, Input, input, output, signal } from '@angular/core';
 import { ProdutoService } from '../../services/produto.service';
 import { CurrencyPipe } from '@angular/common';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Product } from '../../interfaces/product';
+import { Produto } from 'src/app/features/venda/venda';
 
 @Component({
   selector: 'app-lista-de-produtos',
@@ -12,9 +13,24 @@ import { Product } from '../../interfaces/product';
 })
 export class ListaDeProdutosComponent {
 
-  @Input() idCategoria: number = 0;
+  categoriaId = input<string | null>(null);
+  selecionar = output<any>();
 
   produtos = signal<Product[]>([]);
+
+
+  // Dados mockados
+  private todosProdutos = computed(() => {
+    return this.produtos();
+  });
+
+  // Filtro reativo usando computed
+  produtosFiltrados = computed(() => {
+    const categoriaId = this.categoriaId();
+    if (!categoriaId) return this.todosProdutos();
+    return this.todosProdutos().filter(produto => produto.categorias.includes(categoriaId));
+  });
+
 
   constructor(private produtoService: ProdutoService, private ngxSpinnerService: NgxSpinnerService) { }
 
@@ -29,10 +45,9 @@ export class ListaDeProdutosComponent {
   loadProdutos() {
 
     this.ngxSpinnerService.show();
-    if (this.idCategoria != 0) {
-      this.produtoService.getProdutoBycategoria(this.idCategoria).subscribe({
-        next: (data: any) => {
-          console.log(data);
+    if (this.categoriaId() != null) {
+      this.produtoService.getProdutoBycategoria(this.categoriaId()!).subscribe({
+        next: (data) => {
           this.ngxSpinnerService.hide();
           this.produtos.set(data);
         },
@@ -43,8 +58,7 @@ export class ListaDeProdutosComponent {
       });
     } else {
       this.produtoService.getAllProdutos().subscribe({
-        next: (data: any) => {
-          console.log(data);
+        next: (data) => {
           this.ngxSpinnerService.hide();
           this.produtos.set(data);
         },

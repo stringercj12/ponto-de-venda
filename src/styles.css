@@ -1,3 +1,72 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@layer components {
+  .label-form {
+    @apply block text-sm font-semibold text-gray-600 mb-1.5;
+  }
+
+  .input-form {
+    @apply w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all;
+  }
+
+  .btn-primary {
+    @apply bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-300 text-white font-bold py-3 px-6 rounded-lg transition-all shadow-md;
+  }
+
+  .btn-secondary {
+    @apply bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 font-bold py-3 px-6 rounded-lg transition-all;
+  }
+
+  .label-pdv {
+    @apply block text-[10px] font-black uppercase text-gray-400 mb-1 tracking-wider;
+  }
+
+  .input-pdv {
+    @apply w-full h-10 border border-gray-300 px-3 py-2 text-sm font-bold text-gray-700 outline-none focus:ring-2 focus:ring-blue-500 transition-all;
+  }
+
+  .btn-append {
+    @apply bg-gray-100 border border-l-0 border-gray-300 rounded-r-md px-3 hover:bg-gray-200 text-gray-600;
+  }
+
+  .btn-qty-l {
+    @apply h-full px-3 bg-gray-100 border border-gray-300 rounded-l-md hover:bg-gray-200 font-bold text-gray-600;
+  }
+
+  .btn-qty-r {
+    @apply h-full px-3 bg-gray-100 border border-gray-300 rounded-r-md hover:bg-gray-200 font-bold text-gray-600;
+  }
+
+  .input-qty-center {
+    @apply w-full h-full border-y border-gray-300 text-center font-black text-blue-600 focus:outline-none bg-white;
+  }
+
+  /* Animação para erro de SKU não encontrado */
+  .animate-shake {
+    animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+  }
+
+  @keyframes shake {
+
+    10%,
+    90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+      transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+      transform: translate3d(4px, 0, 0);
+    }
+  }
+}

@@ -1,20 +1,43 @@
-<div class="flex items-center divide-x divide-gray-300 bg-white shadow-md rounded">
-  <div class="px-2 py-1 text-xs text-gray-600 hover:bg-gray-200 cursor-pointer">
-    Versão: {{config.version}}
+<footer class="flex items-center justify-between bg-white border-t border-gray-200 px-4 py-1 shadow-inner h-8 select-none">
+  
+  <div class="flex items-center divide-x divide-gray-200 uppercase tracking-tighter text-[10px] font-bold text-gray-500">
+    <div class="px-3 flex items-center gap-1.5 hover:bg-gray-50 cursor-help transition-colors" [title]="'Build: ' + config().buildDate">
+      <i class="ph ph-git-branch text-blue-500 text-xs"></i>
+      <span>V.{{ config().version }}</span>
+    </div>
+    
+    <div class="px-3 flex items-center gap-1.5 hover:bg-gray-50 cursor-pointer transition-colors"
+         [class.bg-red-50]="!isProd()" [class.text-red-600]="!isProd()">
+      <i class="ph ph-cloud-check text-xs"></i>
+      <span>{{ config().ambient }}</span>
+    </div>
+
+    <div class="px-3 flex items-center gap-1.5 hover:bg-gray-50 cursor-pointer">
+      <i class="ph ph-cash-register text-xs"></i>
+      <span>CAIXA: {{ config().caixa }}</span>
+    </div>
+
+    <div class="px-3 flex items-center gap-1.5 hover:bg-gray-50 cursor-pointer">
+      <i class="ph ph-desktop text-xs"></i>
+      <span>PDV: {{ config().pdv }}</span>
+    </div>
   </div>
-  <div class="px-2 py-1 text-xs text-gray-600 hover:bg-gray-200 cursor-pointer">
-    Servidor: {{config.ambient}}
+
+  <div class="flex items-center divide-x divide-gray-200 uppercase tracking-tighter text-[10px] font-bold">
+    <div class="px-3 flex items-center gap-1.5 text-gray-600">
+      <i class="ph ph-user-circle text-sm text-emerald-600"></i>
+      <span>{{ config().user }}</span>
+    </div>
+
+    <div class="px-3 flex items-center gap-1.5" 
+         [class.text-emerald-600]="config().isPrinterOnline"
+         [class.text-red-500]="!config().isPrinterOnline">
+      <i class="ph" [class.ph-printer]="config().isPrinterOnline" [class.ph-printer-slash]="!config().isPrinterOnline"></i>
+      <span>{{ config().printer }}</span>
+      <span class="relative flex h-2 w-2" *ngIf="config().isPrinterOnline">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+      </span>
+    </div>
   </div>
-  <div class="px-2 py-1 text-xs text-gray-600 hover:bg-gray-200 cursor-pointer">
-    Caixa: {{config.caixa}}
-  </div>
-  <div class="px-2 py-1 text-xs text-gray-600 hover:bg-gray-200 cursor-pointer">
-    PDV: {{config.pdv}}
-  </div>
-  <div class="px-2 py-1 text-xs text-gray-600 hover:bg-gray-200 cursor-pointer">
-    Usuário: {{config.user}}
-  </div>
-  <div class="px-2 py-1 text-xs text-gray-600 hover:bg-gray-200 cursor-pointer">
-    Impressora: {{config.printer}}
-  </div>
-</div>
+</footer>

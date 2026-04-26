@@ -10,7 +10,7 @@
   <div class="overflow-hidden w-full overflow-y-auto flex items-center gap-2">
     @for (categoria of categories(); track categoria.id) {
     <button
-      class="flex items-center justify-center h-14 grow p-4 border border-transparent bg-white rounded hover:bg-gray-200 cursor-pointer font-medium text-slate-800"
+      class="flex items-center justify-center h-14 grow p-4 border border-transparent bg-white rounded hover:bg-slate-800 cursor-pointer font-medium text-slate-800"
       [class.!border-emerald-700]="categoria.id === selectedCategoryId"
       [class.!text-emerald-700]="categoria.id === selectedCategoryId"
       [class.!bg-emerald-50]="categoria.id === selectedCategoryId" (click)="selectCategory(categoria.id)">

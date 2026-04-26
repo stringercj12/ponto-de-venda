@@ -1,8 +1,8 @@
+import { CurrencyPipe, SlicePipe } from '@angular/common';
 import { Component, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ProdutoService } from '../../../_shared/services/produto.service';
-import { CurrencyPipe, SlicePipe } from '@angular/common';
 
 @Component({
   selector: 'app-consulta-preco',

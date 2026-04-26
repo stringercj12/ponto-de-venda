@@ -1,80 +1,150 @@
-import { Component, inject, signal } from '@angular/core';
-import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
-import { FiltroProdutoCategoriaComponent } from "../../_shared/components/filtro-produto-categoria/filtro-produto-categoria.component";
-import { ListaDeProdutosComponent } from "../../_shared/components/lista-de-produtos/lista-de-produtos.component";
-import { ConsultaPreco } from "./consulta-preco/consulta-preco";
-import { ModalComponent } from "../../_shared/components/modal/modal.component";
-import { ProdutoService } from '../../_shared/services/produto.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { NgxMaskDirective } from 'ngx-mask';
+import { Dialog } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
+import { Component, computed, ElementRef, HostListener, inject, input, output, resource, signal, viewChild } from '@angular/core';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { AbrirCaixa } from 'src/app/_shared/caixa/abrir-caixa/abrir-caixa';
+import { ListaDeProdutosComponent } from "src/app/_shared/components/lista-de-produtos/lista-de-produtos.component";
+import { Category, CategoryResponse } from 'src/app/_shared/interfaces/categories';
+import { Product } from 'src/app/_shared/interfaces/product';
+import { CategoryService } from 'src/app/_shared/services/category.service';
+import { ProdutoService } from 'src/app/_shared/services/produto.service';
+
+interface CarrinhoItem {
+  id: number;
+  nome: string;
+  quantidade: number;
+  precoUnitario: number;
+}
+
+export interface Produto {
+  id: number;
+  nome: string;
+  preco: number;
+  categoriaId: number;
+  imagem?: string;
+  cor?: string; // Cor para o botão se não houver imagem
+}
 
 @Component({
-  selector: 'app-venda',
-  imports: [ReactiveFormsModule, FiltroProdutoCategoriaComponent, ListaDeProdutosComponent, NgxMaskDirective],
-  providers: [DialogService],
+  selector: 'app-venda-pdv',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, ListaDeProdutosComponent],
   templateUrl: './venda.html',
-  styleUrl: './venda.css'
+  styleUrls: ['./venda.css']
 })
 export class Venda {
+  private readonly fb = inject(NonNullableFormBuilder);
+  private readonly dialogService = inject(Dialog);
+  private readonly categoriaService = inject(CategoryService)
+  private readonly produtoService = inject(ProdutoService)
 
-  ref: DynamicDialogRef | undefined;
-  isConsultaPrecoOpen = false;
-  codigoDoProduto = '';
-  idCategoriaSelecionada: number = 0;
+  skuInput = viewChild<ElementRef<HTMLInputElement>>('skuInput');
 
+  itensCarrinho = signal<CarrinhoItem[]>([]);
+  idCategoriaSelecionada = signal<string | null>(null);
+  skuError = signal(false);
 
-  form: FormGroup = new FormGroup({
-    codigo: new FormControl('', [Validators.required]),
-    quantidade: new FormControl(1, [Validators.required, Validators.min(1)])
+  valorTotal = computed(() =>
+    this.itensCarrinho().reduce((acc, item) => acc + (item.quantidade * item.precoUnitario), 0)
+  );
+
+  form = this.fb.group({
+    codigo: ['', [Validators.required]],
+    quantidade: [1, [Validators.required, Validators.min(1)]]
   });
 
-  constructor(
-    private produtoService: ProdutoService,
-    private ngxSpinnerService: NgxSpinnerService,
-    public dialogService: DialogService
-  ) { }
+  categoriyEvent = output<string | null>();
+  categoriaId = signal<string | null>(null);
 
-  ngOnInit() {
+  categoriaResource = resource({
+    loader: () => firstValueFrom(this.categoriaService.listCategories()).then(response => response.categories),
+  });
 
-  }
+  categorias = computed(() => this.categoriaResource.value() ?? []);
 
-  aumentarQuantidade() {
-    const quantidadeAtual = this.form.get('quantidade')?.value || 1;
-    this.form.patchValue({ quantidade: quantidadeAtual + 1 });
-  }
 
-  diminuirQuantidade() {
-    const quantidadeAtual = this.form.get('quantidade')?.value || 1;
-    if (quantidadeAtual > 1) {
-      this.form.patchValue({ quantidade: quantidadeAtual - 1 });
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'F2':
+        event.preventDefault();
+        this.skuInput()?.nativeElement.focus();
+        break;
+      case 'F10':
+        event.preventDefault();
+        this.finalizarVenda();
+        break;
+      case 'Escape':
+        this.cancelarVenda();
+        break;
     }
   }
 
-  procurarProdutoPeloCodigo(event: any) {
-    console.log('procurarProdutoPeloCodigo => ', event.target.value);
-    this.isConsultaPrecoOpen = true;
-    this.codigoDoProduto = event.target.value;
-    this.form.patchValue({ codigo: event.target.value });
+  alterarQuantidade(delta: number) {
+    const atual = this.form.controls.quantidade.value;
+    if (atual + delta >= 1) {
+      this.form.patchValue({ quantidade: atual + delta });
+    }
+  }
 
-    this.produtoService.getProdutoByCodigo(this.codigoDoProduto).subscribe({
-      next: (data: any) => {
-        console.log('Produto encontrado: ', data.produto);
-        this.isConsultaPrecoOpen = false;
+  procurarProdutoPeloCodigo() {
+    const sku = this.form.value.codigo;
+    if (!sku) return;
+
+    this.produtoService.getProdutoByCodigo(sku).subscribe({
+      next: (produto) => {
+        if (produto) {
+          this.adicionarAoCarrinho(produto);
+        } else {
+          this.triggerError();
+        }
       },
-      error: (error: any) => {
-        console.log('Produto não encontrado, abrindo consulta de preço.');
-        this.isConsultaPrecoOpen = true;
-        this.dialogService.open(ConsultaPreco, {
-          header: 'Select a Product',
-          modal: true,
-          data: {
-            search: this.codigoDoProduto
-          }
-        });
-      }
+      error: () => this.triggerError()
     });
-    // Se o código estiver correto a um produto realiza a adição do produto na venda
-    //  Se não encontrar o produto, abre a modal de consulta de preço
+  }
+
+  adicionarAoCarrinho(produto: Product) {
+    this.itensCarrinho.update(itens => {
+      const existente = itens.find(i => i.id === produto.id);
+      if (existente) {
+        return itens.map(i => i.id === produto.id
+          ? { ...i, quantidade: i.quantidade + this.form.value.quantidade! }
+          : i
+        );
+      }
+      return [{
+        id: produto.id,
+        nome: produto.nome,
+        quantidade: this.form.value.quantidade!,
+        precoUnitario: produto.preco
+      }, ...itens];
+    });
+
+    this.form.reset({ codigo: '', quantidade: 1 });
+    this.skuInput()?.nativeElement.focus();
+  }
+
+  triggerError() {
+    this.skuError.set(true);
+    setTimeout(() => this.skuError.set(false), 500);
+  }
+
+  cancelarVenda() {
+    if (this.itensCarrinho().length > 0 && confirm('Cancelar venda atual?')) {
+      this.itensCarrinho.set([]);
+    }
+  }
+
+  finalizarVenda() {
+    if (this.itensCarrinho().length === 0) return;
+    console.log('Finalizando venda...', this.itensCarrinho());
+    // Navegar para tela de recebimento
+    this.dialogService.open(AbrirCaixa, {
+      minWidth: '800px',
+      panelClass: 'custom-dialog-container'
+    });
+    return;
   }
 }

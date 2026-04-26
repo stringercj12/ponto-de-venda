@@ -1,11 +1,10 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { CarouselModule } from 'primeng/carousel';
 import { CategoryService } from '../../services/category.service';
 @Component({
   selector: 'app-filtro-produto-categoria',
-  imports: [TitleCasePipe, CarouselModule],
+  imports: [TitleCasePipe],
   templateUrl: './filtro-produto-categoria.component.html',
   styleUrl: './filtro-produto-categoria.component.css'
 })

@@ -1,9 +1,9 @@
+import { DatePipe, TitleCasePipe } from '@angular/common';
 import { Component, signal } from '@angular/core';
-import { TableService } from '../../_shared/services/table.service';
-import { DatePipe, JsonPipe, TitleCasePipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { TableService } from '../../_shared/services/table.service';
 
 // export enum TableStatus {
 //   'indisponivel',

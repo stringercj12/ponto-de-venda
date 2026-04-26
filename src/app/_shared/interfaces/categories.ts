@@ -4,7 +4,7 @@ export interface CategoryResponse {
 }
 
 export interface Category {
-  id: number;
+  id: string;
   nome: string;
   descricao: string;
   ativo: boolean;

@@ -1,116 +1,113 @@
-<div class="grid grid-cols-3 h-full gap-2">
-  <div class="border border-white rounded-md col-span-2 flex flex-col gap-2 p-2 overflow-hidden overflow-y-auto h-full">
+<div class="grid grid-cols-1 lg:grid-cols-3 h-screen gap-4 p-4 bg-gray-100 font-sans">
 
-    <app-filtro-produto-categoria (categoriyEvent)="idCategoriaSelecionada = $event" />
-
-    <app-lista-de-produtos [idCategoria]="idCategoriaSelecionada" />
-  </div>
-
-  <div class="border border-white bg-white p-2 overflow-y-auto rounded-md">
-    <form [formGroup]="form" class="space-y-4 flex flex-col justify-around h-full">
-
-      <div class="flex items-center gap-2 mb-4">
-        <div class="flex flex-col flex-grow">
-          <label for="codigo" class="text-sm font-semibold text-gray-700">Código (SKU)</label>
-          <div class="flex items-center gap-2">
-            <input type="text"
-              class="border border-gray-300 rounded-sm p-1 w-full placeholder:text-sm text-right placeholder:text-gray-500 font-medium"
-              prefix="SKU-" mask="00000000" [showMaskTyped]="true" id="codigo" formControlName="codigo"
-              (keyup.enter)="procurarProdutoPeloCodigo($event)" />
-            <button type="button"
-              class="p-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer w-8 h-8 flex items-center justify-center"
-              (click)="procurarProdutoPeloCodigo($event)">
-              <i class="ph ph-magnifying-glass"></i>
+  <section class="lg:col-span-2 flex flex-col gap-3 overflow-hidden h-full">
+    <div class="bg-white border border-gray-200 rounded-xl shadow-sm flex flex-col grow overflow-hidden">
+      <div class="p-4 border-b bg-gray-50 flex justify-between items-center">
+        <h2 class="font-bold text-gray-700">Catálogo de Produtos</h2>
+        <span class="text-xs bg-gray-200 px-2 py-1 rounded text-gray-600 font-mono">F2 para focar SKU</span>
+      </div>
+      <div class="grow overflow-y-auto p-4">
+        <div class="p-4 border-b bg-gray-50">
+          <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            <button (click)="categoriaId.set(null); categoriyEvent.emit(null)" [class.bg-gray-800]="!categoriaId()" [class.text-white]="!categoriaId()"
+              class="px-4 py-2 rounded-full border text-xs font-bold whitespace-nowrap transition-all hover:bg-slate-800 cursor-pointer hover:text-white">
+              TODOS
             </button>
+
+            @for (categoria of categorias(); track categoria.id) {
+            <button (click)="categoriaId.set(categoria.id); categoriyEvent.emit(categoria.id)"
+              [class.bg-emerald-500]="categoriaId() === categoria.id" [class.text-white]="categoriaId() === categoria.id"
+              class="px-4 py-2 rounded-full border text-xs font-bold whitespace-nowrap transition-all hover:bg-slate-800 cursor-pointer hover:text-white">
+              {{ categoria.nome | uppercase }}
+            </button>
+            }
           </div>
         </div>
-        <div class="flex items-center h-full mt-5">
-          <i class="ph ph-x text-gray-400"></i>
-        </div>
-        <div class="flex flex-col flex-grow">
-          <label for="quantidade" class="text-sm font-semibold text-gray-700">Qtde</label>
-          <div class="flex items-center gap-2">
-            <input type="number" placeholder="1"
-              class=" border border-gray-300 text-center rounded-sm p-1 w-12 pl-3 placeholder:text-sm placeholder:text-gray-500 placeholder:font-normal"
-              id="quantidade" min="1" formControlName="quantidade" />
-            <button class="p-2 w-8 h-8 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
-              (click)="diminuirQuantidade()">
-              <div class="ph ph-minus"></div>
-            </button>
-            <button class="p-2 w-8 h-8 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
-              (click)="aumentarQuantidade()">
-              <div class="ph ph-plus"></div>
-            </button>
-            <button class="p-2 w-8 h-8 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">
-              <div class="ph ph-timer"></div>
-            </button>
-          </div>
+
+        <div class="grow overflow-y-auto p-4">
+          <app-lista-de-produtos [categoriaId]="categoriaId()" (selecionar)="adicionarAoCarrinho($event)"></app-lista-de-produtos>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="flex-grow border border-gray-100 rounded-md overflow-hidden overflow-y-auto">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-          <thead class="text-xs text-gray-700 bg-gray-100 sticky top-0 z-10">
-            <tr class="text-gray-700 text-sm">
-              <th class="p-1 rounded-l"></th>
-              <th class="px-2 py-1 border-x border-gray-200">
-                Produto
-              </th>
-              <th class="px-2 py-1 border-x border-gray-200">Qtde</th>
-              <th class="px-2 py-1 border-x border-gray-200">Unitário</th>
-              <th class="px-2 py-1 rounded-r">Total</th>
+  <aside class="flex flex-col h-full overflow-hidden">
+    <form [formGroup]="form"
+      class="bg-white border border-gray-200 rounded-xl shadow-xl flex flex-col h-full overflow-hidden">
+
+      <header class="p-4 border-b border-gray-100 bg-white space-y-4">
+        <div class="grid grid-cols-12 gap-2">
+          <div class="col-span-8">
+            <label class="label-pdv">Código SKU (F2)</label>
+            <div class="flex">
+              <input #skuInput type="text" formControlName="codigo" [class.ring-red-500]="skuError()"
+                [class.animate-bounce]="skuError()" class="input-pdv rounded-r-none border-r-0" placeholder="Bipagem..."
+                (keyup.enter)="procurarProdutoPeloCodigo()">
+              <button type="button" (click)="procurarProdutoPeloCodigo()" class="btn-append">
+                <i class="ph ph-magnifying-glass font-bold"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-span-4">
+            <label class="label-pdv">Qtd</label>
+            <div class="flex items-center h-10">
+              <button type="button" (click)="alterarQuantidade(-1)" class="btn-qty-l">-</button>
+              <input type="number" formControlName="quantidade" class="input-qty-center">
+              <button type="button" (click)="alterarQuantidade(1)" class="btn-qty-r">+</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="grow overflow-y-auto">
+        <table class="w-full text-left border-collapse">
+          <thead class="bg-gray-800 text-white sticky top-0 z-20">
+            <tr class="text-[10px] uppercase tracking-widest">
+              <th class="p-3 text-center w-12">#</th>
+              <th class="p-3">Item</th>
+              <th class="p-3 text-right">Total</th>
             </tr>
           </thead>
-          @for (item of [0,1,2,3,4,5, 6,7,8,9,10]; track $index) {
-          <tr class="border-b border-gray-200 hover:bg-gray-50">
-            <td class="p-1 text-center align-top">1</td>
-            <td class="px-2 py-1 min-w-40">Hamburguer</td>
-            <td class="px-2 py-1">1</td>
-            <td class="px-2 py-1 whitespace-nowrap">R$ 5,00</td>
-            <td class="px-2 py-1 whitespace-nowrap">R$ 5,00</td>
-          </tr>
-          <tr class="border-b border-gray-200 hover:bg-gray-50">
-            <td class="p-1 text-center align-top">2</td>
-            <td class="px-2 py-1 min-w-40">Coca Cola</td>
-            <td class="px-2 py-1">1</td>
-            <td class="px-2 py-1 whitespace-nowrap">R$ 5,00</td>
-            <td class="px-2 py-1 whitespace-nowrap">R$ 5,00</td>
-          </tr>
-          <tr class="border-b border-gray-200 hover:bg-gray-50">
-            <td class="p-1 text-center align-top">2</td>
-            <td class="px-2 py-1 min-w-40"> Agua Mineral Crystal Vip com Gás 350ml</td>
-            <td class="px-2 py-1">2</td>
-            <td class="px-2 py-1 whitespace-nowrap">R$ 2,99</td>
-            <td class="px-2 py-1 whitespace-nowrap">R$ 5,98</td>
-          </tr>
-          }
+          <tbody class="divide-y divide-gray-100">
+            @for (item of itensCarrinho(); track item.id; let i = $index) {
+            <tr class="hover:bg-amber-50 group transition-colors">
+              <td class="p-3 text-center text-gray-400 font-mono text-xs">{{ i + 1 }}</td>
+              <td class="p-3">
+                <div class="font-bold text-gray-800 uppercase text-sm truncate w-40">{{ item.nome }}</div>
+                <div class="text-[10px] text-gray-500 font-medium">
+                  {{ item.quantidade }} un x {{ item.precoUnitario | currency:'BRL' }}
+                </div>
+              </td>
+              <td class="p-3 text-right font-black text-gray-900 font-mono">
+                {{ (item.quantidade * item.precoUnitario) | currency:'BRL' }}
+              </td>
+            </tr>
+            } @empty {
+            <tr>
+              <td colspan="3" class="p-10 text-center text-gray-300 italic">Carrinho vazio</td>
+            </tr>
+            }
+          </tbody>
         </table>
       </div>
 
-      <div>
-
-        <div class="p-4 bg-gray-100 rounded text-right flex items-end gap-2 justify-end text-2xl mb-6">
-          <span for="codigo" class="text-sm font-semibold text-gray-700">Valor Total</span>
-          <span>R$ 10,00</span>
+      <footer class="p-4 bg-gray-50 border-t border-gray-200 mt-auto">
+        <div class="flex justify-between items-center mb-4 bg-emerald-600 text-white p-4 rounded-lg shadow-lg">
+          <span class="text-xs font-bold uppercase tracking-widest opacity-80">Total Geral</span>
+          <span class="text-4xl font-black font-mono">{{ valorTotal() | currency:'BRL' }}</span>
         </div>
 
-        <div class="flex items-center justify-end gap-4">
-          <button
-            class="p-4 flex items-center justify-center min-w-48 text-center gap-2 bg-red-200 text-red-700 text-lg font-semibold rounded hover:bg-red-300 cursor-pointer"
-            (click)="aumentarQuantidade()">
-            <div class="ph ph-x-circle"></div>
-            Cancelar
+        <div class="grid grid-cols-2 gap-3">
+          <button type="button" (click)="cancelarVenda()"
+            class="flex items-center justify-center gap-2 py-3 border border-red-200 text-red-600 rounded-lg font-bold hover:bg-red-50 transition-all">
+            <i class="ph ph-x-circle text-xl"></i> Cancelar (ESC)
           </button>
-          <button
-            class="p-4 flex items-center justify-center min-w-48 text-center gap-2 bg-emerald-200 text-emerald-700 text-lg font-semibold rounded hover:bg-emerald-300 cursor-pointer">
-            <div class="ph ph-check-circle"></div>
-            Receber e finalizar
+          <button type="button" (click)="finalizarVenda()" [disabled]="itensCarrinho().length === 0"
+            class="flex items-center justify-center gap-2 py-3 bg-emerald-500 text-white rounded-lg font-black hover:bg-emerald-600 disabled:bg-gray-300 shadow-md active:scale-95 transition-all">
+            <i class="ph ph-check-circle text-xl"></i> FINALIZAR (F10)
           </button>
         </div>
-      </div>
-
+      </footer>
     </form>
-  </div>
-
-
+  </aside>
 </div>

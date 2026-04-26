@@ -1,74 +1,57 @@
-<header class="flex items-center h-20 bg-white shadow-md border-none w-full">
+<header class="flex items-center h-20 bg-white shadow-sm border-b border-gray-100 w-full px-6">
 
-  <div class="p-toolbar-group-start">
-    <div class="px-4">
-      <span class="text-xl font-semibold text-gray-800">PDV CAIXA</span>
-    </div>
+  <div class="shrink-0 mr-8">
+    <span class="text-xl font-black tracking-tight text-emerald-600">PDV CAIXA</span>
   </div>
 
-  <div class="flex items-center h-full">
-    @for (item of items; track $index) {
-    <a [routerLink]="item.routerLink" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-      class="group flex items-center gap-2 cursor-pointer relative px-4 h-full hover:bg-gray-50 text-gray-700 text-sm font-medium transition-colors duration-300"
-      [ngClass]="{ 'active': routerLinkActive }" #routerLinkActive="routerLinkActive">
-      <i [class]="item.icon + ' transition-colors duration-300 group-[.active]:text-emerald-700'"></i>
-      <span class="transition-colors duration-300 group-[.active]:text-emerald-700">
+  <nav class="flex items-center justify-center h-full grow">
+    @for (item of items(); track item.routerLink) {
+    <a (click)="navigateItem(item)"
+      class="group flex items-center gap-2 cursor-pointer relative px-5 h-full text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
+      [class.active]="itemSelected() === item">
+
+      <i [class]="item.icon" class="text-xl transition-colors group-[.active]:text-emerald-600"></i>
+      <span class="text-sm font-semibold transition-colors group-[.active]:text-emerald-600">
         {{item.label}}
       </span>
 
       <span
-        class="absolute bottom-0 left-0 h-[3px] w-0 bg-emerald-700 transition-all duration-300 group-[.active]:w-full">
-      </span>
+        class="absolute bottom-0 left-0 h-1 w-0 bg-emerald-600 transition-all duration-300 group-[.active]:w-full"></span>
     </a>
     }
-  </div>
+  </nav>
 
-  <div class="flex items-center gap-2 cursor-pointer relative group px-4 h-full hover:bg-gray-50"
-    (click)="userDropdown.toggle($event)">
+  <div
+    class="flex items-center gap-3 cursor-pointer pl-4 h-full border-l border-gray-100 hover:bg-gray-50 transition-colors"
+    [cdkMenuTriggerFor]="menu">
 
-    <p-avatar image="https://github.com/stringercj12.png" size="large" shape="circle" styleClass="w-10 h-10">
-    </p-avatar>
+    <div class="text-right hidden sm:block">
+      <span class="block text-sm font-bold text-gray-800">Carlos Stringer</span>
+      <span class="block text-[10px] uppercase tracking-widest text-gray-400">Vendedor</span>
+    </div>
 
-    <div class="flex items-center justify-between border-0 p-0">
-      <div class="text-left mr-3">
-        <span class="block text-gray-900 font-medium">Carlos Stringer</span>
-        <small class="block text-gray-500 text-sm">Vendedor</small>
-      </div>
-      <button class="p-0">
-        <i class="ph ph-caret-down text-gray-400"></i>
-      </button>
+    <div class="relative w-10 h-10">
+      <img src="https://github.com/stringercj12.png"
+        class="w-full h-full rounded-full border-2 border-emerald-500 p-0.5 object-cover" alt="Avatar">
+      <div class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></div>
     </div>
   </div>
-
 </header>
-<p-popover #userDropdown styleClass="p-0 border-none shadow-lg">
-  <div class="w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-    <div class="py-1" role="menu">
-      @for (menuItem of userMenuItems; track $index) {
-      }
-      @for (menuItem of userMenuItems; track $index) {
-      @if (menuItem.separator) {
-      <div class="border-t border-gray-100 my-1"></div>
-      }
-      @else {
-      @if(menuItem.routerLink){
-      <a [routerLink]="menuItem.routerLink"
-        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150"
-        [ngClass]="menuItem.styleClass" role="menuitem">
-        <i [class]="menuItem.icon + ' mr-2'"></i>
-        {{ menuItem.label }}
-      </a>
-      }
-      @if(menuItem.command && !menuItem.routerLink){
-      <button (click)="menuItem.command($any($event))"
-        class="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors duration-150"
-        [ngClass]="menuItem.styleClass" role="menuitem">
-        <i [class]="menuItem.icon + ' mr-2'"></i>
-        {{ menuItem.label }}
-      </button>
-      }
-      }
-      }
-    </div>
+
+<ng-template #menu>
+  <div class="w-56 bg-white rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 p-1 mt-2 focus:outline-none" cdkMenu>
+    @for (menuItem of userMenuItems(); track menuItem.label) {
+    @if (menuItem.separator) {
+    <div class="h-px bg-gray-100 my-1"></div>
+    } @else {
+    <button
+      (click)="menuItem.routerLink ? navigateItem({ routerLink: menuItem.routerLink }) : menuItem.command?.(menuItem)"
+      class="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors"
+      [ngClass]="menuItem.styleClass ?? 'text-gray-700 hover:bg-gray-100'" cdkMenuItem>
+      <i [class]="menuItem.icon" class="text-lg opacity-70"></i>
+      {{ menuItem.label }}
+    </button>
+    }
+    }
   </div>
-</p-popover>
+</ng-template>
