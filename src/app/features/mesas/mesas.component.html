@@ -22,14 +22,14 @@
 </div>
 
 <div class="grid grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-3 w-full">
-  @for (table of filteredTables; track table?.id) {
+  @for (table of filteredTables(); track table?.id) {
   <div class="rounded bg-blue-200 hover:bg-gray-200 cursor-pointer min-w-[230px] max-w-[260px] border border-gray-200"
-    [class]="getStatusBackgroundClass(table?.estado)" (click)="openTableOptions(table)">
+    [class]="getStatusBackgroundClass(table?.status)" (click)="openTableOptions(table)">
     <div class="flex justify-between items-center border-b border-white mb-2 px-2 py-1">
       <div class="text-lg text-gray-500 font-medium">
-        0{{ table?.id >= 10 ? table?.id : '0' + table?.id }}
+        {{ table?.nome }}
       </div>
-      <div class="text-sm font-medium flex items-center" [class]="getStatusTextClass(table?.estado)">
+      <div class="text-sm font-medium flex items-center" [class]="getStatusTextClass(table?.status)">
         @if(loadingUpdateTableStatus() && tableSelected()?.id === table?.id) {
         <svg class="mr-1 -ml-1 size-5 animate-spin text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none"
           viewBox="0 0 24 24">
@@ -39,7 +39,18 @@
           </path>
         </svg>
         }
-        {{ table?.estado | titlecase }}
+
+        <button [cdkMenuTriggerFor]="menu" class="text-center underline cursor-pointer" (click)="$event.stopPropagation()">
+          {{ table?.status | titlecase }}
+        </button>
+        <ng-template #menu>
+          <div class="flex flex-col items-start bg-white border border-gray-200 shadow-lg" cdkMenu>
+            <button class="bg-gray-100 hover:bg-gray-200 cursor-pointer text-start py-1.5 px-2.5 w-full" cdkMenuItem (click)="openTableOptions(table, 'livre')">Livre</button>
+            <button class="bg-gray-100 hover:bg-gray-200 cursor-pointer text-start py-1.5 px-2.5 w-full" cdkMenuItem (click)="openTableOptions(table, 'reservada')">Reservada</button>
+            <button class="bg-gray-100 hover:bg-gray-200 cursor-pointer text-start py-1.5 px-2.5 w-full" cdkMenuItem (click)="openTableOptions(table, 'indisponivel')">Indisponível</button>
+            <button class="bg-gray-100 hover:bg-gray-200 cursor-pointer text-start py-1.5 px-2.5 w-full" cdkMenuItem (click)="openTableOptions(table, 'fechamento')">Fechamento</button>
+          </div>
+        </ng-template>
       </div>
     </div>
     <div class="text-xs text-gray-700 px-2 pt-1 pb-3 gap-1 space-y-1">
@@ -56,6 +67,15 @@
         Vlr. Total: R$ 100,00
       </div>
     </div>
+  </div>
+  }@empty{
+  <div class="col-span-full py-10 flex flex-col items-center gap-4">
+    <span class="text-center text-gray-400 italic">Nenhuma mesa encontrada, cadastre uma nova.</span>
+    <button
+      class="px-3.5 py-1.5 rounded-full cursor-pointer bg-emerald-800 hover:bg-emerald-600 text-white text-sm font-medium transition-colors"
+      type="button" (click)="openCreateTableModal()">
+      Cadastrar Mesa
+    </button>
   </div>
   }
 </div>

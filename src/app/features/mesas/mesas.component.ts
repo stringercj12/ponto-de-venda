@@ -1,9 +1,10 @@
 import { DatePipe, TitleCasePipe } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { TableService } from '../../_shared/services/table.service';
+import { CdkMenuModule } from '@angular/cdk/menu';
 
 // export enum TableStatus {
 //   'indisponivel',
@@ -18,7 +19,8 @@ type TableStatus = 'disponivel' | 'ocupada' | 'reservada' | 'indisponivel' | 'fe
 
 @Component({
   selector: 'app-mesas',
-  imports: [DatePipe, TitleCasePipe, ReactiveFormsModule],
+  imports: [DatePipe, TitleCasePipe, ReactiveFormsModule, CdkMenuModule],
+  providers: [TableService, NgxSpinnerService],
   templateUrl: './mesas.component.html',
   styleUrl: './mesas.component.css'
 })
@@ -28,13 +30,13 @@ export class MesasComponent {
   loadingUpdateTableStatus = signal<boolean>(false);
   tableSelected = signal<any>(null);
 
-  originalTables: any[] = [];
-  filteredTables: any[] = [];
+  originalTables = signal<any[]>([]);
+  filteredTables = signal<any[]>([]);
 
   formContrlSearhch: FormControl = new FormControl('');
 
-
-  constructor(private tableService: TableService, private ngxSpinnerService: NgxSpinnerService) { }
+  private readonly tableService: TableService = inject(TableService);
+  private readonly ngxSpinnerService: NgxSpinnerService = inject(NgxSpinnerService);
 
   ngOnInit() {
     this.loadTables();
@@ -45,9 +47,9 @@ export class MesasComponent {
     this.ngxSpinnerService.show();
     this.tableService.getAllTables().subscribe({
       next: (data: any) => {
-        console.log(data.mesas)
-        this.originalTables = data.mesas;
-        this.filteredTables = data.mesas;
+        console.log(data)
+        this.originalTables.set(data);
+        this.filteredTables.set(data);
         this.setupSearchControl();
         this.ngxSpinnerService.hide();
       },
@@ -69,14 +71,14 @@ export class MesasComponent {
         const searchValue = value?.toLowerCase();
 
         if (!searchValue) {
-          this.filteredTables = this.originalTables;
+          this.filteredTables.set(this.originalTables());
           return;
         }
 
-        this.filteredTables = this.originalTables.filter(table => {
+        this.filteredTables.set(this.originalTables().filter(table => {
           return table.nome.toLowerCase().includes(searchValue) ||
             table.id.toString() === searchValue;
-        });
+        }));
       });
   }
 
@@ -122,15 +124,37 @@ export class MesasComponent {
     }
   }
 
-  openTableOptions(table: any) {
+  openTableOptions(table: any, status: string = 'livre') {
     console.log('Open options for table:', table);
     // Lógica para abrir opções da mesa
 
     this.tableSelected.set(table);
     this.loadingUpdateTableStatus.set(true);
-    this.tableService.updateTableStatus(table.id, 'reservada').subscribe((response: any) => {
-      console.log('Table status updated:', response);
-      this.ngOnInit();
+    this.tableService.updateTableStatus(table.id, status).subscribe({
+      next: (response: any) => {
+        console.log('Table status updated:', response);
+        this.loadingUpdateTableStatus.set(false);
+        this.tableSelected.set(null);
+        this.loadTables();
+      },
+      error: (error) => {
+        console.error('Error updating table status:', error);
+        this.loadingUpdateTableStatus.set(false);
+        this.tableSelected.set(null);
+      }
+    });
+  }
+
+  openCreateTableModal() {
+    console.log('Table created:');
+    this.tableService.createTable({ nome: 'Mesa ' + (this.originalTables().length + 1), lugares: 20 }).subscribe({
+      next: (response: any) => {
+        console.log('Table created:', response);
+        this.ngOnInit();
+      },
+      error: (error) => {
+        console.error('Error creating table:', error);
+      }
     });
   }
 }

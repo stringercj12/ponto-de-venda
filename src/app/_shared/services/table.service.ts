@@ -10,11 +10,15 @@ export class TableService {
   constructor(private httpClient: HttpClient) { }
 
   getAllTables(): Observable<any[]> {
-    return this.httpClient.get<any[]>('/api/mesas').pipe();
+    return this.httpClient.get<any[]>('mesas').pipe();
   }
 
-  updateTableStatus(tableId: number, status: string) {
-    return this.httpClient.put(`/api/mesas/${tableId}/update-status`, { status }).pipe();
+    updateTableStatus(tableId: string, status: string) {
+    return this.httpClient.put(`mesas/${tableId}/update-status`, { status }).pipe();
+  }
+
+  createTable(formData: any) {
+    return this.httpClient.post(`mesas`, formData).pipe();
   }
 
 }
