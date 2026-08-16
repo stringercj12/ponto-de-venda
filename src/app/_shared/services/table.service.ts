@@ -17,4 +17,8 @@ export class TableService {
     return this.httpClient.put(`mesas/${tableId}/update-status`, { status }).pipe();
   }
 
+  createTable(formData: any) {
+    return this.httpClient.post(`mesas`, formData).pipe();
+  }
+
 }
