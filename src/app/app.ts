@@ -3,11 +3,16 @@ import { RouterOutlet } from '@angular/router';
 import { Header } from "./_shared/components/header/header";
 import { FooterComponent } from "./_shared/components/footer/footer.component";
 import { NgxSpinnerComponent } from 'ngx-spinner';
-
-
+import { NgxSonnerToaster } from 'ngx-sonner';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, FooterComponent, NgxSpinnerComponent],
+  imports: [
+    RouterOutlet,
+    Header,
+    FooterComponent,
+    NgxSpinnerComponent,
+    NgxSonnerToaster
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

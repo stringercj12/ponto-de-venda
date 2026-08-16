@@ -1,45 +1,67 @@
-import { DatePipe, TitleCasePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { TableService } from '../../_shared/services/table.service';
 import { CdkMenuModule } from '@angular/cdk/menu';
+import { Table, TableStatus, TableStatusEnum } from 'src/app/_shared/interfaces/tables';
+import { toast } from 'ngx-sonner';
 
-// export enum TableStatus {
-//   'indisponivel',
-//   'disponivel',
-//   'ocupada',
-//   'fechamento',
-//   'livre',
-//   'reservada'
-// }
-
-type TableStatus = 'disponivel' | 'ocupada' | 'reservada' | 'indisponivel' | 'fechamento' | 'livre';
 
 @Component({
   selector: 'app-mesas',
-  imports: [DatePipe, TitleCasePipe, ReactiveFormsModule, CdkMenuModule],
+  imports: [DatePipe, TitleCasePipe, ReactiveFormsModule, CdkMenuModule, CurrencyPipe],
   providers: [TableService, NgxSpinnerService],
   templateUrl: './mesas.component.html',
   styleUrl: './mesas.component.css'
 })
 export class MesasComponent {
 
-  tables = signal<any[]>([]);
+  tables = signal<Table[]>([]);
   loadingUpdateTableStatus = signal<boolean>(false);
-  tableSelected = signal<any>(null);
+  tableSelected = signal<Table | null>(null);
 
-  originalTables = signal<any[]>([]);
-  filteredTables = signal<any[]>([]);
+  originalTables = signal<Table[]>([]);
+  filteredTables = signal<Table[]>([{
+    id: `8F810789-91C0-434B-BDB8-63DF83BDAADA`,
+    name: 'dsdddsd',
+    status: 'Occupied',
+    number: 202,
+    capacity: 222,
+    description: 'dedsd',
+    statusDescription: 'Ocupada',
+    createdAt: '8F810789-91C0-434B-BDB8-63DF83BDAADA',
+    updatedAt: '8F810789-91C0-434B-BDB8-63DF83BDAADA'
+  }]);
+
+  public readonly TableStatusEnum = TableStatusEnum;
 
   formContrlSearhch: FormControl = new FormControl('');
 
   private readonly tableService: TableService = inject(TableService);
   private readonly ngxSpinnerService: NgxSpinnerService = inject(NgxSpinnerService);
 
+  // Mapeamento de Cores para Background e Borda Card
+  readonly statusBackgroundMap: Record<TableStatus, string> = {
+    [TableStatusEnum.Unavailable]: 'bg-gray-100 border-gray-300',
+    [TableStatusEnum.Occupied]: 'bg-red-50 border-red-200',
+    [TableStatusEnum.Closed]: 'bg-yellow-50 border-yellow-200',
+    [TableStatusEnum.Free]: 'bg-emerald-50 border-emerald-200',
+    [TableStatusEnum.Reserved]: 'bg-purple-50 border-purple-200',
+  };
+
+  // Mapeamento de Cores para Texto
+  readonly statusTextMap: Record<TableStatus, string> = {
+    [TableStatusEnum.Unavailable]: 'text-gray-600',
+    [TableStatusEnum.Occupied]: 'text-red-600',
+    [TableStatusEnum.Closed]: 'text-yellow-700',
+    [TableStatusEnum.Free]: 'text-emerald-600',
+    [TableStatusEnum.Reserved]: 'text-purple-600',
+  };
+
   ngOnInit() {
-    this.loadTables();
+    // this.loadTables();
   }
 
   loadTables() {
@@ -76,69 +98,33 @@ export class MesasComponent {
         }
 
         this.filteredTables.set(this.originalTables().filter(table => {
-          return table.nome.toLowerCase().includes(searchValue) ||
+          return table.name.toLowerCase().includes(searchValue) ||
             table.id.toString() === searchValue;
         }));
       });
   }
 
-  public getStatusBackgroundClass(status: TableStatus | undefined): string {
-    if (!status) return 'bg-gray-100 border-gray-300';
-
-    switch (status) {
-      case 'livre':
-        return 'bg-emerald-200 border-emerald-500'; // Verde claro para livre
-      case 'disponivel':
-        return 'bg-blue-100 border-blue-200';
-      case 'ocupada':
-        return 'bg-red-100 border-red-200';      // Vermelho forte para ocupada
-      case 'reservada':
-        return 'bg-purple-100 border-purple-200';     // Azul para reservada
-      case 'fechamento':
-        return 'bg-yellow-100 border-yellow-300';   // Amarelo para fechamento
-      case 'indisponivel':
-        return 'bg-gray-200 border-gray-200';     // Cinza para indisponível
-      default:
-        return 'bg-white';
-    }
+  getStatusBackgroundClass(status: TableStatus): string {
+    return this.statusBackgroundMap[status] ?? 'bg-white border-gray-200';
   }
 
-  public getStatusTextClass(status: TableStatus | undefined): string {
-    if (!status) return 'text-gray-800';
-
-    switch (status) {
-      case 'livre':
-        return 'text-emerald-800'; //
-      case 'disponivel':
-        return 'text-blue-800'; // Verde claro para livre
-      case 'ocupada':
-        return 'text-red-800';      // Vermelho forte para ocupada
-      case 'reservada':
-        return 'text-purple-800';     // Azul para reservada
-      case 'fechamento':
-        return 'text-yellow-800';   // Amarelo para fechamento
-      case 'indisponivel':
-        return 'text-gray-800';     // Cinza para indisponível
-      default:
-        return 'text-white';
-    }
+  getStatusTextClass(status: TableStatus): string {
+    return this.statusTextMap[status] ?? 'text-gray-500';
   }
 
-  openTableOptions(table: any, status: string = 'livre') {
-    console.log('Open options for table:', table);
-    // Lógica para abrir opções da mesa
-
+  openTableOptions(table: any, status: TableStatus = 'Free') {
     this.tableSelected.set(table);
     this.loadingUpdateTableStatus.set(true);
+
     this.tableService.updateTableStatus(table.id, status).subscribe({
       next: (response: any) => {
-        console.log('Table status updated:', response);
         this.loadingUpdateTableStatus.set(false);
         this.tableSelected.set(null);
+        toast.success('Table status updated:', response)
         this.loadTables();
       },
       error: (error) => {
-        console.error('Error updating table status:', error);
+        toast.error('Error updating table status:', error);
         this.loadingUpdateTableStatus.set(false);
         this.tableSelected.set(null);
       }
@@ -147,7 +133,7 @@ export class MesasComponent {
 
   openCreateTableModal() {
     console.log('Table created:');
-    this.tableService.createTable({ nome: 'Mesa ' + (this.originalTables().length + 1), lugares: 20 }).subscribe({
+    this.tableService.createTable({ name: 'Mesa ' + (this.originalTables().length + 1), capacity: 20, number: 202, description: `` }).subscribe({
       next: (response: any) => {
         console.log('Table created:', response);
         this.ngOnInit();
@@ -168,5 +154,23 @@ export class MesasComponent {
     //     console.error('Erro ao criar mesa: ', error);
     //   }
     // }); 
+  }
+
+
+  // No Componente (.ts)
+  canChangeStatus(currentStatus: TableStatus, targetStatus: TableStatusEnum): boolean {
+    console.log('currentStatuss', currentStatus)
+    console.log('targetStatus', targetStatus)
+    if (currentStatus === targetStatus) return false;
+
+    const allowedTransitions: Record<TableStatusEnum, TableStatusEnum[]> = {
+      [TableStatusEnum.Free]: [TableStatusEnum.Occupied, TableStatusEnum.Reserved, TableStatusEnum.Unavailable],
+      [TableStatusEnum.Occupied]: [TableStatusEnum.Free, TableStatusEnum.Closed],
+      [TableStatusEnum.Reserved]: [TableStatusEnum.Free, TableStatusEnum.Occupied],
+      [TableStatusEnum.Closed]: [TableStatusEnum.Free, TableStatusEnum.Occupied],
+      [TableStatusEnum.Unavailable]: [TableStatusEnum.Free],
+    };
+
+    return allowedTransitions[currentStatus]?.includes(targetStatus) ?? false;
   }
 }
