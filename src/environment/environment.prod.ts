@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
-  ambient: 'production',
-  apiUrl: 'https://api.seupdv.com'
+  ambient: 'Production',
+  apiUrl: 'https://api.seupdv.com',
+  version: '1.0.0'
 };

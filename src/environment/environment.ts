@@ -1,5 +1,8 @@
+import { version } from "typescript";
+
 export const environment = {
   production: false,
-  ambient: 'development',
-  apiUrl: 'http://localhost:8080/api/'
+  ambient: 'Development',
+  apiUrl: 'https://localhost:5001/',
+  version: '1.0.0'
 };

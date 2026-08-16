@@ -38,7 +38,7 @@
   }
 
   .input-qty-center {
-    @apply w-full h-full border-y border-gray-300 text-center font-black text-blue-600 focus:outline-none bg-white;
+    @apply w-full h-full border-y border-gray-300 text-center font-medium text-blue-600 focus:outline-none bg-white;
   }
 
   /* Animação para erro de SKU não encontrado */

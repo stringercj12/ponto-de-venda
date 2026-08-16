@@ -11,14 +11,14 @@ export class FooterComponent {
 
   // Estado centralizado via Signal
   readonly config = signal({
-    version: '1.0.0',
+    version: environment.version,
     buildDate: '2024-06-01',
-    ambient: 'PRODUÇÃO', // Ex: environment.ambient
+    ambient: environment.ambient,
     caixa: '01',
     pdv: 'TERMINAL-PDV-01',
     user: 'ADMIN MASTER',
     printer: 'EPSON-TM-T20',
-    isPrinterOnline: true // Status dinâmico
+    isPrinterOnline: true
   });
 
   // Computed para facilitar classes de CSS baseadas no ambiente

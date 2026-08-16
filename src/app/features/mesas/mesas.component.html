@@ -57,5 +57,16 @@
       </div>
     </div>
   </div>
+  } @empty {
+  <div class="flex flex-col items-center justify-center bg-white rounded border border-gray-200 p-10">
+    <p class="text-gray-500 text-center text-lg font-medium">Nenhuma mesa encontrada.</p>
+    <button
+      class="w-44 bg-emerald-700 hover:bg-emerald-600 text-white py-2 px-4 rounded-full mt-4 flex items-center justify-center"
+      (click)="adicionarMesa()">
+      <span class="text-base font-medium">
+        Adicionar Mesa
+      </span>
+    </button>
+  </div>
   }
 </div>

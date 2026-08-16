@@ -1,25 +1,27 @@
-export interface ProductResponse {
-  total: number;
-  produtos: Product[];
+import { Category } from "./categories";
+
+export interface BaseProduct {
+  id: number;
+  name: string;
+  sku: string;
+  description: string;
+  price: number;
+  active: boolean;
+}
+export interface ProductListResponse extends BaseProduct {
+  categories: string[];
+  thumbnailUrl: string;
+}
+export interface Product extends BaseProduct {
+  categories: Category[];
+  attachments: Attachment[];
 }
 
-export interface Product {
-  id: number;
-  nome: string;
-  descricao: string;
-  preco: number;
-  codigo: string;
-  categorias: string[];
-  ativo: boolean;
-  images: ProductImage[];
-}
-
-export interface ProductImage {
-  id: number;
+export interface Attachment {
+  attachmentId: string;
   url: string;
   extension: string;
-  name: string;
-  name_original: string;
-  size: number;
-  product_id: number;
+  originalName: string;
+  isPrimary: boolean,
+  displayOrder: number
 }

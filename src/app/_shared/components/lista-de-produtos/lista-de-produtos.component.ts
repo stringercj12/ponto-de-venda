@@ -2,7 +2,7 @@ import { Component, computed, Input, input, output, signal } from '@angular/core
 import { ProdutoService } from '../../services/produto.service';
 import { CurrencyPipe } from '@angular/common';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Product } from '../../interfaces/product';
+import { Product, ProductListResponse } from '../../interfaces/product';
 import { Produto } from 'src/app/features/venda/venda';
 
 @Component({
@@ -16,7 +16,7 @@ export class ListaDeProdutosComponent {
   categoriaId = input<string | null>(null);
   selecionar = output<any>();
 
-  produtos = signal<Product[]>([]);
+  produtos = signal<ProductListResponse[]>([]);
 
 
   // Dados mockados
@@ -28,7 +28,7 @@ export class ListaDeProdutosComponent {
   produtosFiltrados = computed(() => {
     const categoriaId = this.categoriaId();
     if (!categoriaId) return this.todosProdutos();
-    return this.todosProdutos().filter(produto => produto.categorias.includes(categoriaId));
+    return this.todosProdutos().filter(produto => produto.categories.includes(categoriaId));
   });
 
 

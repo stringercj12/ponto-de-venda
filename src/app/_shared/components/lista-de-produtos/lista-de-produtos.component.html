@@ -1,11 +1,12 @@
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
   @for (produto of produtosFiltrados(); track produto.id) {
-  <button (click)="selecionar.emit(produto)" type="button" [attr.aria-label]="'Selecionar ' + produto.nome"
-    class="flex flex-col h-40 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all overflow-hidden group active:scale-95 bg-white">
-
+  <div (click)="selecionar.emit(produto)" [attr.aria-label]="'Selecionar ' + produto.name"
+    class="relative flex flex-col h-40 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all overflow-hidden group active:scale-95 bg-white">
+    <span
+      class="font-bold text-orange-600 rounded-2xl text-xs text-center px-2 p-px bg-orange-100 w-fit  absolute right-2  bottom-2 block z-20">Promoção</span>
     <div class="relative h-20 w-full bg-gray-50 flex items-center justify-center overflow-hidden">
-      @if (produto.images[0]?.url) {
-      <img [src]="produto.images[0].url" [alt]="produto.nome"
+      @if (produto.thumbnailUrl) {
+      <img [src]="produto.thumbnailUrl" [alt]="produto.name"
         class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
         loading="lazy">
       } @else {
@@ -14,14 +15,14 @@
     </div>
 
     <div class="p-2 flex flex-col justify-between grow text-left">
-      <span class="text-[11px] font-bold text-gray-700 uppercase line-clamp-2 leading-tight">
-        {{ produto.nome }}
+      <span class="text-sm font-bold text-gray-700 uppercase line-clamp-2 leading-tight">
+        {{ produto.name }}
       </span>
-      <span class="text-sm font-black text-emerald-600 mt-1">
-        {{ produto.preco | currency:'BRL' }}
+      <span class="text-sm font-bold text-emerald-600 mt-1">
+        {{ produto.price | currency:'BRL' }}
       </span>
     </div>
-  </button>
+  </div>
   } @empty {
   <div class="col-span-full py-10 text-center text-gray-400 italic">
     Nenhum produto encontrado nesta categoria.

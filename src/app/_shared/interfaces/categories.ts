@@ -1,12 +1,9 @@
-export interface CategoryResponse {
-  total: number;
-  categories: Category[];
-}
-
 export interface Category {
   id: string;
-  nome: string;
-  descricao: string;
-  ativo: boolean;
+  name: string;
+  description: string;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
   selecionado?: boolean;
 }

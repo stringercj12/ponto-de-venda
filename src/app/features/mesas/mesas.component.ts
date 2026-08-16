@@ -33,8 +33,10 @@ export class MesasComponent {
 
   formContrlSearhch: FormControl = new FormControl('');
 
-
-  constructor(private tableService: TableService, private ngxSpinnerService: NgxSpinnerService) { }
+  constructor(
+    private tableService: TableService,
+    private ngxSpinnerService: NgxSpinnerService
+  ) { }
 
   ngOnInit() {
     this.loadTables();
@@ -45,9 +47,9 @@ export class MesasComponent {
     this.ngxSpinnerService.show();
     this.tableService.getAllTables().subscribe({
       next: (data: any) => {
-        console.log(data.mesas)
-        this.originalTables = data.mesas;
-        this.filteredTables = data.mesas;
+        console.log(data)
+        this.originalTables = data;
+        this.filteredTables = data;
         this.setupSearchControl();
         this.ngxSpinnerService.hide();
       },
@@ -132,5 +134,17 @@ export class MesasComponent {
       console.log('Table status updated:', response);
       this.ngOnInit();
     });
+  }
+
+  adicionarMesa() {
+    // this.tableService.createTable().subscribe({
+    //   next: (data: any) => {
+    //     console.log('Mesa criada: ', data);
+    //     this.loadTables();
+    //   },
+    //   error: (error) => {
+    //     console.error('Erro ao criar mesa: ', error);
+    //   }
+    // }); 
   }
 }

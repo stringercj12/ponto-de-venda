@@ -1,12 +1,10 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, HostListener, inject, input, output, resource, signal, viewChild } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, inject, output, resource, signal, viewChild } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AbrirCaixa } from 'src/app/_shared/caixa/abrir-caixa/abrir-caixa';
 import { ListaDeProdutosComponent } from "src/app/_shared/components/lista-de-produtos/lista-de-produtos.component";
-import { Category, CategoryResponse } from 'src/app/_shared/interfaces/categories';
 import { Product } from 'src/app/_shared/interfaces/product';
 import { CategoryService } from 'src/app/_shared/services/category.service';
 import { ProdutoService } from 'src/app/_shared/services/produto.service';
@@ -59,7 +57,7 @@ export class Venda {
   categoriaId = signal<string | null>(null);
 
   categoriaResource = resource({
-    loader: () => firstValueFrom(this.categoriaService.listCategories()).then(response => response.categories),
+    loader: () => firstValueFrom(this.categoriaService.listCategories()).then(response => response),
   });
 
   categorias = computed(() => this.categoriaResource.value() ?? []);
@@ -80,6 +78,7 @@ export class Venda {
         this.cancelarVenda();
         break;
     }
+
   }
 
   alterarQuantidade(delta: number) {
@@ -116,9 +115,9 @@ export class Venda {
       }
       return [{
         id: produto.id,
-        nome: produto.nome,
+        nome: produto.name,
         quantidade: this.form.value.quantidade!,
-        precoUnitario: produto.preco
+        precoUnitario: produto.price
       }, ...itens];
     });
 
@@ -140,7 +139,7 @@ export class Venda {
   finalizarVenda() {
     if (this.itensCarrinho().length === 0) return;
     console.log('Finalizando venda...', this.itensCarrinho());
-    // Navegar para tela de recebimento
+
     this.dialogService.open(AbrirCaixa, {
       minWidth: '800px',
       panelClass: 'custom-dialog-container'

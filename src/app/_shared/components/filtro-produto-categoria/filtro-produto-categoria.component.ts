@@ -50,8 +50,7 @@ export class FiltroProdutoCategoriaComponent {
     this.ngxSpinnerService.show();
     this.categoryService.listCategories().subscribe({
       next: (response) => {
-        console.log(response.categories);
-        this.categories.set(response.categories);
+        this.categories.set(response);
         this.ngxSpinnerService.hide();
       },
       error: () => {
